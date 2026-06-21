@@ -5,24 +5,20 @@ import { addPins, type PinHandle } from '../cesium/pins'
 import { RideCamera } from '../cesium/rideCamera'
 import { orbitAround, flyToStreetLevel } from '../cesium/camera'
 import { useAppStore } from '../state/useAppStore'
+import { CATEGORY_CHIP, CATEGORY_EMOJI } from '../data/categories'
+import AreaInfoSidebar from '../components/AreaInfoSidebar'
+import ImageGallery from '../components/ImageGallery'
 
 interface TourModeProps {
   city: City
   viewer: ReturnType<typeof useViewer>
 }
 
-/** Normalize a stop's narration to an array of beats. */
 function beatsFor(narration: string | string[]): string[] {
   return Array.isArray(narration) ? narration : [narration]
 }
 
-function ActionChip({
-  onClick,
-  children,
-}: {
-  onClick: () => void
-  children: ReactNode
-}) {
+function ActionChip({ onClick, children }: { onClick: () => void; children: ReactNode }) {
   return (
     <button
       onClick={onClick}
@@ -33,6 +29,30 @@ function ActionChip({
   )
 }
 
+function MiniTab({ active, onClick, children }: { active: boolean; onClick: () => void; children: ReactNode }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`-mb-px border-b-2 px-2.5 py-1.5 text-[12px] font-medium transition ${
+        active ? 'border-sunset text-ink' : 'border-transparent text-cocoa/60 hover:text-cocoa'
+      }`}
+    >
+      {children}
+    </button>
+  )
+}
+
+// Speed lines for the flight overlay
+const SPEED_LINES = Array.from({ length: 18 }, (_, i) => ({
+  top: `${5 + (i / 18) * 90}%`,
+  width: `${60 + Math.sin(i * 2.3) * 30}px`,
+  delay: `${(i * 0.11) % 1.2}s`,
+  duration: `${0.6 + (i % 5) * 0.13}s`,
+  opacity: 0.15 + (i % 3) * 0.12,
+}))
+
+type StopTab = 'overview' | 'details' | 'nearby'
+
 export default function TourMode({ city, viewer }: TourModeProps) {
   const tour = city.tours[0]
   const [index, setIndex] = useState(0)
@@ -41,9 +61,12 @@ export default function TourMode({ city, viewer }: TourModeProps) {
   const [phase, setPhase] = useState<'intro' | 'riding' | 'outro'>('intro')
   const [showFact, setShowFact] = useState(false)
   const [autoPlay, setAutoPlay] = useState(false)
+  const [stopTab, setStopTab] = useState<StopTab>('overview')
+  const [flightProgress, setFlightProgress] = useState(0)
   const pinsRef = useRef<PinHandle | null>(null)
   const rideRef = useRef<RideCamera | null>(null)
   const orbitStopRef = useRef<(() => void) | null>(null)
+  const flightTimerRef = useRef<number | null>(null)
   const selectMode = useAppStore((s) => s.selectMode)
 
   const stopOrbit = useCallback(() => {
@@ -56,22 +79,17 @@ export default function TourMode({ city, viewer }: TourModeProps) {
     [city.places],
   )
 
-  // Set up pins + the gliding ride camera once the viewer is ready.
   useEffect(() => {
     const v = viewer.viewerRef.current
     if (!viewer.ready || !v || !tour) return
 
     const handle = addPins(v, city.places, () => {})
     pinsRef.current = handle
-    // The tour focuses on stops — only show the current stop's pin, not all POIs.
     handle.setVisibleIds([])
 
     const stopViews = tour.stops.map((s) => {
       const p = placeById(s.placeId)
-      return {
-        coord: { lat: p?.lat ?? 0, lng: p?.lng ?? 0 },
-        view: s.view ?? p!.view,
-      }
+      return { coord: { lat: p?.lat ?? 0, lng: p?.lng ?? 0 }, view: s.view ?? p!.view }
     })
 
     const ride = new RideCamera(v, tour.route, stopViews, {
@@ -79,18 +97,33 @@ export default function TourMode({ city, viewer }: TourModeProps) {
         setTraveling(false)
         setBeat(0)
         setShowFact(false)
+        setStopTab('overview')
+        setFlightProgress(0)
+        if (flightTimerRef.current) {
+          window.clearInterval(flightTimerRef.current)
+          flightTimerRef.current = null
+        }
         const place = placeById(tour.stops[stopIndex].placeId)
         if (place) {
-          // Show only this stop's pin.
           pinsRef.current?.setVisibleIds([place.id])
           pinsRef.current?.setSelected(place.id)
         }
       },
       onDepart: () => {
         setTraveling(true)
-        // Hide all pins while gliding so the view stays clean.
+        setFlightProgress(0)
         pinsRef.current?.setVisibleIds([])
         pinsRef.current?.setSelected(null)
+        const start = Date.now()
+        const duration = 5500
+        flightTimerRef.current = window.setInterval(() => {
+          const pct = Math.min((Date.now() - start) / duration, 1)
+          setFlightProgress(pct)
+          if (pct >= 1 && flightTimerRef.current) {
+            window.clearInterval(flightTimerRef.current)
+            flightTimerRef.current = null
+          }
+        }, 50)
       },
     })
     rideRef.current = ride
@@ -100,38 +133,30 @@ export default function TourMode({ city, viewer }: TourModeProps) {
       stopOrbit()
       ride.destroy()
       handle.destroy()
+      if (flightTimerRef.current) window.clearInterval(flightTimerRef.current)
       rideRef.current = null
       pinsRef.current = null
     }
   }, [viewer.ready, viewer.viewerRef, tour, placeById, stopOrbit])
 
-  // Advance forward: step through this stop's narration beats, then ride to
-  // the next stop. Backward: previous beat, or previous stop.
   const advance = useCallback(() => {
     if (!tour || phase !== 'riding' || rideRef.current?.isTraveling()) return
     const stop = tour.stops[index]
     const beats = beatsFor(stop.narration)
-    if (beat < beats.length - 1) {
-      setBeat((b) => b + 1)
-      return
-    }
+    if (beat < beats.length - 1) { setBeat((b) => b + 1); return }
     if (index < tour.stops.length - 1) {
       stopOrbit()
       const next = index + 1
       setIndex(next)
       rideRef.current?.goToStop(next)
     } else {
-      // Reached the end of the last stop's narration -> the journey is complete.
       setPhase('outro')
     }
   }, [tour, index, beat, phase, stopOrbit])
 
   const back = useCallback(() => {
     if (!tour || rideRef.current?.isTraveling()) return
-    if (beat > 0) {
-      setBeat((b) => b - 1)
-      return
-    }
+    if (beat > 0) { setBeat((b) => b - 1); return }
     if (index > 0) {
       stopOrbit()
       const prev = index - 1
@@ -150,7 +175,6 @@ export default function TourMode({ city, viewer }: TourModeProps) {
     [tour, index, stopOrbit],
   )
 
-  // Per-stop camera actions (the place's tuned view).
   const currentView = (() => {
     if (!tour) return undefined
     const s = tour.stops[index]
@@ -171,7 +195,6 @@ export default function TourMode({ city, viewer }: TourModeProps) {
     flyToStreetLevel(v, currentView)
   }, [viewer.viewerRef, currentView, stopOrbit])
 
-  // Scroll wheel + arrow keys advance; ESC hops off into explore.
   useEffect(() => {
     let wheelLock = false
     const onWheel = (e: WheelEvent) => {
@@ -196,14 +219,12 @@ export default function TourMode({ city, viewer }: TourModeProps) {
     }
   }, [advance, back, selectMode])
 
-  // Auto-play: when on and parked at a stop, advance after a reading dwell.
   useEffect(() => {
     if (!autoPlay || phase !== 'riding' || traveling) return
     const t = window.setTimeout(() => advance(), 4200)
     return () => window.clearTimeout(t)
   }, [autoPlay, phase, traveling, index, beat, advance])
 
-  // Stop auto-play when the journey ends.
   useEffect(() => {
     if (phase === 'outro') setAutoPlay(false)
   }, [phase])
@@ -223,17 +244,22 @@ export default function TourMode({ city, viewer }: TourModeProps) {
   const atLastStop = index === tour.stops.length - 1
   const atVeryStart = index === 0 && beat === 0
   const atVeryEnd = atLastStop && lastBeat
+  const nextStop = !atLastStop ? tour.stops[index + 1] : null
+  const nextPlace = nextStop ? placeById(nextStop.placeId) : null
+
+  const allImages = [
+    ...(place?.image ? [place.image] : []),
+    ...(place?.images ?? []),
+  ]
 
   return (
     <>
-      {/* Intro title card */}
+      {/* Intro */}
       {viewer.ready && phase === 'intro' && (
         <div className="pointer-events-auto absolute inset-0 z-40 flex items-center justify-center bg-ink/40 backdrop-blur-sm">
-          <div className="max-w-md rounded-3xl border border-cocoa/20 bg-cream/97 p-8 text-center shadow-2xl animate-[fadeIn_0.4s_ease]">
+          <div className="max-w-md rounded-3xl border border-cocoa/20 bg-cream/97 p-8 text-center shadow-2xl" style={{ animation: 'fadeInPlace 0.4s ease both' }}>
             <div className="text-5xl">✈️</div>
-            <h1 className="mt-3 font-display text-3xl font-bold text-ink">
-              {tour.name}
-            </h1>
+            <h1 className="mt-3 font-display text-3xl font-bold text-ink">{tour.name}</h1>
             <p className="mt-3 text-cocoa">{tour.blurb}</p>
             <p className="mt-4 text-xs uppercase tracking-widest text-cocoa/70">
               {tour.stops.length} stops · a scenic Bay flyover
@@ -254,17 +280,14 @@ export default function TourMode({ city, viewer }: TourModeProps) {
         </div>
       )}
 
-      {/* Journey-complete outro */}
+      {/* Outro */}
       {viewer.ready && phase === 'outro' && (
         <div className="pointer-events-auto absolute inset-0 z-40 flex items-center justify-center bg-ink/40 backdrop-blur-sm">
-          <div className="max-w-md rounded-3xl border border-cocoa/20 bg-cream/97 p-8 text-center shadow-2xl animate-[fadeIn_0.4s_ease]">
+          <div className="max-w-md rounded-3xl border border-cocoa/20 bg-cream/97 p-8 text-center shadow-2xl" style={{ animation: 'fadeInPlace 0.4s ease both' }}>
             <div className="text-5xl">🛬</div>
-            <h1 className="mt-3 font-display text-3xl font-bold text-ink">
-              Coming in to land
-            </h1>
+            <h1 className="mt-3 font-display text-3xl font-bold text-ink">Coming in to land</h1>
             <p className="mt-3 text-cocoa">
-              You flew the whole Bay — the bridge, the city, the coast, all{' '}
-              {tour.stops.length} sights. Hope you got the lay of the land.
+              You flew the whole Bay — the bridge, the city, the coast, all {tour.stops.length} sights.
             </p>
             <button
               onClick={() => selectMode('explore')}
@@ -272,179 +295,310 @@ export default function TourMode({ city, viewer }: TourModeProps) {
             >
               Roam the map yourself →
             </button>
-            <button
-              onClick={() => {
-                setPhase('riding')
-                jumpTo(0)
-              }}
-              className="mt-3 block w-full text-xs text-cocoa transition hover:text-ink"
-            >
+            <button onClick={() => { setPhase('riding'); jumpTo(0) }} className="mt-3 block w-full text-xs text-cocoa transition hover:text-ink">
               ride it again
             </button>
           </div>
         </div>
       )}
 
-      {/* Route HUD, top-center */}
+      {/* ── RIDING ── */}
       {viewer.ready && phase === 'riding' && (
-        <div className="pointer-events-none absolute left-1/2 top-4 z-10 flex -translate-x-1/2 flex-col items-center gap-2">
-          <div className="rounded-full bg-cream/85 px-4 py-1.5 text-sm text-cocoa shadow-sm backdrop-blur">
-            ✈️ {tour.name} · Stop {index + 1} of {tour.stops.length}
-          </div>
-          {/* Interactive route line — click a stop to glide there */}
-          <div className="pointer-events-auto flex items-center gap-1 rounded-full bg-cream/70 px-3 py-1.5 shadow-sm backdrop-blur">
-            {tour.stops.map((s, i) => {
-              const p = placeById(s.placeId)
-              return (
-                <div key={s.placeId} className="flex items-center">
-                  <button
-                    title={p?.name}
-                    onClick={() => jumpTo(i)}
-                    disabled={traveling}
-                    className={`rounded-full transition disabled:cursor-default ${
-                      i === index
-                        ? 'h-3 w-3 scale-110 bg-sunset'
-                        : i < index
-                          ? 'h-2.5 w-2.5 bg-sage hover:scale-125'
+        <>
+          {/* Route HUD top-center */}
+          <div className="pointer-events-none absolute left-1/2 top-4 z-10 flex -translate-x-1/2 flex-col items-center gap-2">
+            <div className="rounded-full bg-cream/85 px-4 py-1.5 text-sm text-cocoa shadow-sm backdrop-blur">
+              ✈️ {tour.name} · Stop {index + 1} of {tour.stops.length}
+            </div>
+            <div className="pointer-events-auto flex items-center gap-1 rounded-full bg-cream/70 px-3 py-1.5 shadow-sm backdrop-blur">
+              {tour.stops.map((s, i) => {
+                const p = placeById(s.placeId)
+                return (
+                  <div key={s.placeId} className="flex items-center">
+                    <button
+                      title={p?.name}
+                      onClick={() => jumpTo(i)}
+                      disabled={traveling}
+                      className={`rounded-full transition disabled:cursor-default ${
+                        i === index ? 'h-3 w-3 scale-110 bg-sunset'
+                          : i < index ? 'h-2.5 w-2.5 bg-sage hover:scale-125'
                           : 'h-2.5 w-2.5 bg-cocoa/25 hover:scale-125 hover:bg-cocoa/50'
-                    }`}
-                  />
-                  {i < tour.stops.length - 1 && (
-                    <span
-                      className={`h-0.5 w-4 ${i < index ? 'bg-sage' : 'bg-cocoa/20'}`}
+                      }`}
                     />
-                  )}
-                </div>
-              )
-            })}
+                    {i < tour.stops.length - 1 && (
+                      <span className={`h-0.5 w-4 ${i < index ? 'bg-sage' : 'bg-cocoa/20'}`} />
+                    )}
+                  </div>
+                )
+              })}
+            </div>
           </div>
-        </div>
-      )}
 
-      {/* Auto-play toggle + hop-off hint, top-right */}
-      {viewer.ready && phase === 'riding' && (
-        <div className="absolute right-4 top-4 z-10 flex items-center gap-2">
-          <button
-            onClick={() => setAutoPlay((a) => !a)}
-            className={`pointer-events-auto rounded-full px-3 py-1.5 text-xs font-medium shadow-md backdrop-blur transition ${
-              autoPlay
-                ? 'bg-sunset text-cream'
-                : 'bg-cream/90 text-cocoa hover:bg-cream'
-            }`}
-          >
-            {autoPlay ? '⏸ Auto-playing' : '▶ Auto-play'}
-          </button>
-          <span className="pointer-events-none rounded-full bg-cream/80 px-3 py-1 text-xs text-cocoa shadow-sm backdrop-blur">
-            ESC to hop off
-          </span>
-        </div>
-      )}
+          {/* Top-right controls */}
+          <div className="absolute right-4 top-4 z-10 flex items-center gap-2">
+            <button
+              onClick={() => setAutoPlay((a) => !a)}
+              className={`pointer-events-auto rounded-full px-3 py-1.5 text-xs font-medium shadow-md backdrop-blur transition ${
+                autoPlay ? 'bg-sunset text-cream' : 'bg-cream/90 text-cocoa hover:bg-cream'
+              }`}
+            >
+              {autoPlay ? '⏸ Auto-playing' : '▶ Auto-play'}
+            </button>
+            <span className="pointer-events-none rounded-full bg-cream/80 px-3 py-1 text-xs text-cocoa shadow-sm backdrop-blur">
+              ESC to hop off
+            </span>
+          </div>
 
-      {/* Station card, bottom-center */}
-      {viewer.ready && phase === 'riding' && (
-        <div className="pointer-events-auto absolute bottom-6 left-1/2 z-20 w-[36rem] max-w-[calc(100vw-2rem)] -translate-x-1/2 overflow-hidden rounded-2xl border border-cocoa/20 bg-cream/95 shadow-xl backdrop-blur">
-          <div className="flex">
-            {place?.image && (
-              <img
-                src={place.image}
-                alt={place.name}
-                className="h-auto w-40 shrink-0 object-cover"
-                onError={(e) =>
-                  ((e.currentTarget as HTMLImageElement).style.display = 'none')
-                }
-              />
-            )}
-            <div className="flex flex-1 flex-col p-4">
-              <div className="flex items-center justify-between">
-                <div className="text-xs text-cocoa">
-                  {traveling ? (
-                    <span className="animate-pulse">✈️ in flight…</span>
-                  ) : (
-                    <span>📍 now over</span>
+          {/* ── CINEMATIC FLIGHT OVERLAY ── */}
+          {traveling && (
+            <div className="pointer-events-none absolute inset-0 z-30 overflow-hidden">
+              {/* Dark backdrop */}
+              <div className="absolute inset-0 bg-ink/65 backdrop-blur-[2px]" />
+
+              {/* Speed lines streaming left-to-right */}
+              <div className="absolute inset-0">
+                {SPEED_LINES.map((line, i) => (
+                  <div
+                    key={i}
+                    className="absolute left-0 right-0 h-px bg-cream/80 rounded-full"
+                    style={{
+                      top: line.top,
+                      opacity: line.opacity,
+                      animation: `speedLine ${line.duration} linear ${line.delay} infinite`,
+                      width: line.width,
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* Radar rings expanding from center */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <div
+                    key={i}
+                    className="absolute rounded-full border border-sunset/40"
+                    style={{
+                      animation: `radarPulse 2.5s ease-out ${i * 0.5}s infinite`,
+                      width: 0,
+                      height: 0,
+                    }}
+                  />
+                ))}
+                {/* Radar sweep line */}
+                <div
+                  className="absolute w-32 h-px origin-left"
+                  style={{
+                    background: 'linear-gradient(to right, transparent, rgba(232,71,59,0.6))',
+                    animation: 'scanSweep 3s linear infinite',
+                    transformOrigin: '0 50%',
+                  }}
+                />
+              </div>
+
+              {/* Center content */}
+              <div
+                className="absolute inset-0 flex flex-col items-center justify-center"
+                style={{ animation: 'fadeInPlace 0.6s ease both' }}
+              >
+                {/* Plane icon */}
+                <div
+                  className="text-5xl mb-6"
+                  style={{ animation: 'planePulse 2s ease-in-out infinite' }}
+                >
+                  ✈️
+                </div>
+
+                <p className="text-[11px] font-bold uppercase tracking-[0.3em] text-cream/50 mb-2">
+                  Now flying to
+                </p>
+
+                <h2 className="font-display text-4xl font-bold text-cream text-center px-8 drop-shadow-lg">
+                  {nextPlace?.name ?? 'next stop'}
+                </h2>
+
+                {stop.flyingOver && (
+                  <p className="mt-2 text-[13px] text-cream/60">
+                    passing over {stop.flyingOver}
+                  </p>
+                )}
+
+                {/* Destination preview card */}
+                {nextPlace && (
+                  <div
+                    className="mt-8 flex items-center gap-4 rounded-2xl border border-white/10 bg-white/8 px-5 py-3 backdrop-blur-sm max-w-sm w-full mx-4"
+                    style={{ animation: 'fadeInPlace 0.8s ease 0.3s both' }}
+                  >
+                    {nextPlace.image && (
+                      <img
+                        src={nextPlace.image}
+                        alt={nextPlace.name}
+                        className="h-14 w-20 shrink-0 rounded-xl object-cover border border-white/10"
+                        onError={(e) => ((e.currentTarget as HTMLImageElement).style.display = 'none')}
+                      />
+                    )}
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-cream/50">Next stop</p>
+                      <p className="mt-0.5 font-semibold text-cream text-[15px] leading-tight">{nextPlace.name}</p>
+                      <p className="mt-0.5 text-[12px] text-cream/60 line-clamp-1">{nextPlace.blurb}</p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Progress bar */}
+                <div className="mt-6 w-64 h-1 rounded-full bg-white/10 overflow-hidden">
+                  <div
+                    className="h-full bg-sunset rounded-full transition-all duration-100"
+                    style={{ width: `${flightProgress * 100}%` }}
+                  />
+                </div>
+                <p className="mt-2 text-[10px] text-cream/40 uppercase tracking-widest">
+                  {Math.round(flightProgress * 100)}% · {Math.round((1 - flightProgress) * 5)}s remaining
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Area info sidebar — shown when parked */}
+          {!traveling && stop.areaInfo && (
+            <AreaInfoSidebar area={stop.areaInfo} />
+          )}
+
+          {/* ── STATION CARD (parked) ── */}
+          {!traveling && (
+            <div className="pointer-events-auto absolute bottom-6 left-1/2 z-20 w-[42rem] max-w-[calc(100vw-2rem)] -translate-x-1/2 overflow-hidden rounded-2xl border border-cocoa/20 bg-cream/95 shadow-xl backdrop-blur">
+              {/* Image gallery */}
+              {allImages.length > 0 && (
+                <ImageGallery images={allImages} alt={place?.name ?? ''} className="h-40 w-full" />
+              )}
+
+              <div className="px-4 pt-3 pb-0">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {place && (
+                        <span className={`inline-block rounded-full px-2 py-0.5 text-[11px] font-medium ${CATEGORY_CHIP[place.category]}`}>
+                          {CATEGORY_EMOJI[place.category]}
+                        </span>
+                      )}
+                      <span className="text-[11px] text-cocoa/60">📍 Stop {index + 1} of {tour.stops.length}</span>
+                    </div>
+                    <h2 className="mt-1 font-display text-lg font-semibold leading-tight text-ink">{place?.name}</h2>
+                  </div>
+                  {beats.length > 1 && (
+                    <div className="flex gap-1 shrink-0 mt-1">
+                      {beats.map((_, i) => (
+                        <span key={i} className={`h-1 w-4 rounded-full transition ${i === beat ? 'bg-sunset' : 'bg-cocoa/20'}`} />
+                      ))}
+                    </div>
                   )}
                 </div>
-                {beats.length > 1 && (
-                  <div className="flex gap-1">
-                    {beats.map((_, i) => (
-                      <span
-                        key={i}
-                        className={`h-1 w-4 rounded-full transition ${
-                          i === beat ? 'bg-sunset' : 'bg-cocoa/20'
-                        }`}
-                      />
+
+                {/* Tags */}
+                {place?.tags && place.tags.length > 0 && (
+                  <div className="mt-1.5 flex flex-wrap gap-1">
+                    {place.tags.map((t) => (
+                      <span key={t.label} className="rounded-full bg-parchment border border-cocoa/10 px-2 py-0.5 text-[10px] font-medium text-cocoa">
+                        {t.emoji} {t.label}
+                      </span>
                     ))}
                   </div>
                 )}
               </div>
 
-              <h2 className="mt-0.5 font-display text-lg font-semibold leading-tight text-ink">
-                {place?.name}
-              </h2>
+              {/* Sub-tabs */}
+              <div className="flex gap-0.5 border-b border-cocoa/10 px-4 mt-2">
+                <MiniTab active={stopTab === 'overview'} onClick={() => setStopTab('overview')}>Overview</MiniTab>
+                {(place?.history || (place?.stats?.length ?? 0) > 0) && (
+                  <MiniTab active={stopTab === 'details'} onClick={() => setStopTab('details')}>Details</MiniTab>
+                )}
+                {(place?.nearby?.length ?? 0) > 0 && (
+                  <MiniTab active={stopTab === 'nearby'} onClick={() => setStopTab('nearby')}>Nearby</MiniTab>
+                )}
+              </div>
 
-              <p
-                key={`${index}-${beat}`}
-                className="mt-1 min-h-[2.75rem] animate-[fadeIn_0.35s_ease] text-[13px] leading-snug text-cocoa"
-              >
-                {beats[beat]}
-              </p>
-
-              {/* Interactive: fun-fact reveal + tip (compact) */}
-              {!traveling && (
-                <div className="mt-1.5 space-y-1.5">
-                  {stop.funFact &&
-                    (showFact ? (
-                      <div className="animate-[fadeIn_0.3s_ease] rounded-lg bg-sky/10 px-2.5 py-1.5 text-[11px] leading-snug text-sky">
-                        💡 {stop.funFact}
+              {/* Tab content */}
+              <div className="px-4 py-2.5 text-[13px] text-cocoa max-h-40 overflow-y-auto">
+                {stopTab === 'overview' && (
+                  <div className="space-y-2">
+                    <p key={`${index}-${beat}`} className="leading-snug" style={{ animation: 'fadeInPlace 0.35s ease both' }}>
+                      {beats[beat]}
+                    </p>
+                    {stop.funFact && (
+                      showFact ? (
+                        <div className="rounded-lg bg-sky/10 px-2.5 py-1.5 text-[11px] leading-snug text-sky" style={{ animation: 'fadeInPlace 0.3s ease both' }}>
+                          💡 {stop.funFact}
+                        </div>
+                      ) : (
+                        <button onClick={() => setShowFact(true)} className="text-[11px] font-medium text-sky transition hover:underline">
+                          💡 Did you know? →
+                        </button>
+                      )
+                    )}
+                    {lastBeat && stop.tip && (
+                      <div className="rounded-lg bg-gold/10 px-2.5 py-1.5 text-[11px] leading-snug text-[#9a6a1f]">
+                        ⭐ {stop.tip}
                       </div>
-                    ) : (
-                      <button
-                        onClick={() => setShowFact(true)}
-                        className="text-[11px] font-medium text-sky transition hover:underline"
-                      >
-                        💡 Did you know? →
-                      </button>
-                    ))}
-                  {lastBeat && stop.tip && (
-                    <div className="rounded-lg bg-gold/10 px-2.5 py-1.5 text-[11px] leading-snug text-[#9a6a1f]">
-                      ⭐ {stop.tip}
-                    </div>
-                  )}
-                </div>
-              )}
+                    )}
+                  </div>
+                )}
 
-              {/* Camera action chips */}
-              {!traveling && (
-                <div className="mt-2 flex flex-wrap gap-1.5">
+                {stopTab === 'details' && (
+                  <div className="space-y-2">
+                    {place?.history && <p className="leading-snug">{place.history}</p>}
+                    {place?.stats && place.stats.length > 0 && (
+                      <dl className="overflow-hidden rounded-xl border border-cocoa/10">
+                        {place.stats.map((s, i) => (
+                          <div key={s.label} className={`flex justify-between px-3 py-1.5 text-[12px] ${i % 2 ? 'bg-parchment/40' : 'bg-parchment/20'}`}>
+                            <dt className="text-cocoa/70">{s.label}</dt>
+                            <dd className="font-semibold text-ink">{s.value}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                    )}
+                  </div>
+                )}
+
+                {stopTab === 'nearby' && place?.nearby && (
+                  <div className="space-y-2">
+                    {place.nearby.map((n) => (
+                      <div key={n.name} className="rounded-xl border border-cocoa/10 bg-parchment/40 px-3 py-2">
+                        <div className="flex items-center justify-between">
+                          <p className="text-[13px] font-semibold text-ink">{n.name}</p>
+                          <span className="text-[11px] text-cocoa/60">{n.distance}</span>
+                        </div>
+                        <p className="mt-0.5 text-[12px] text-cocoa/80 leading-snug">{n.whyVisit}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Footer */}
+              <div className="border-t border-cocoa/10 px-4 py-2.5">
+                <div className="flex flex-wrap gap-1.5 mb-2.5">
                   <ActionChip onClick={lookAround}>🔄 Look around</ActionChip>
                   <ActionChip onClick={streetLevel}>🏙️ Street view</ActionChip>
                 </div>
-              )}
-
-              <div className="mt-3 flex items-center justify-between">
-                <button
-                  onClick={back}
-                  disabled={atVeryStart || traveling}
-                  className="rounded-full px-3 py-1.5 text-sm font-medium text-cocoa transition enabled:hover:bg-parchment disabled:opacity-30"
-                >
-                  ← Back
-                </button>
-                <button
-                  onClick={advance}
-                  disabled={atVeryEnd || traveling}
-                  className="rounded-full bg-sunset px-5 py-2 text-sm font-medium text-cream shadow transition enabled:hover:bg-[#d9632d] disabled:opacity-40"
-                >
-                  {atVeryEnd
-                    ? 'Land ✈'
-                    : traveling
-                      ? 'In flight…'
-                      : lastBeat
-                        ? 'Next sight →'
-                        : 'Continue →'}
-                </button>
+                <div className="flex items-center justify-between">
+                  <button
+                    onClick={back}
+                    disabled={atVeryStart}
+                    className="rounded-full px-3 py-1.5 text-sm font-medium text-cocoa transition enabled:hover:bg-parchment disabled:opacity-30"
+                  >
+                    ← Back
+                  </button>
+                  <button
+                    onClick={advance}
+                    disabled={atVeryEnd}
+                    className="rounded-full bg-sunset px-5 py-2 text-sm font-medium text-cream shadow transition enabled:hover:bg-[#d9632d] disabled:opacity-40"
+                  >
+                    {atVeryEnd ? 'Land ✈' : lastBeat ? 'Next sight →' : 'Continue →'}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          )}
+        </>
       )}
     </>
   )

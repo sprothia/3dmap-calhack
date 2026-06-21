@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react'
-import type { Category, City, Place } from '../data/types'
+import type { Category, City, Place, SubPOI } from '../data/types'
 import type { useViewer } from '../cesium/useViewer'
 import { addPins, type PinHandle } from '../cesium/pins'
 import { flyToView, orbitAround, flyToStreetLevel } from '../cesium/camera'
@@ -100,6 +100,16 @@ export default function ExploreMode({ city, viewer }: ExploreModeProps) {
     flyToStreetLevel(v, selectedPlace.view)
   }, [viewer.viewerRef, selectedPlace, stopOrbit])
 
+  const flyToSubPOI = useCallback(
+    (sub: SubPOI) => {
+      const v = viewer.viewerRef.current
+      if (!v) return
+      stopOrbit()
+      flyToView(v, sub.view, 2)
+    },
+    [viewer.viewerRef, stopOrbit],
+  )
+
   return (
     <>
       {viewer.ready && (
@@ -121,6 +131,7 @@ export default function ExploreMode({ city, viewer }: ExploreModeProps) {
           }}
           onLookAround={lookAround}
           onStreetView={streetView}
+          onFlyToSubPOI={flyToSubPOI}
         />
       )}
     </>

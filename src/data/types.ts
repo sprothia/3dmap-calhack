@@ -28,6 +28,48 @@ export interface PlaceStat {
   value: string
 }
 
+/** Emoji + label chip shown on the card (e.g. 🏛 Historic, 🌉 Engineering). */
+export interface PlaceTag {
+  emoji: string
+  label: string
+}
+
+/** A "Look Closer" sub-point of interest around a main place. */
+export interface SubPOI {
+  id: string
+  name: string
+  description: string
+  lat: number
+  lng: number
+  view: CameraView
+}
+
+/** One of 3 nearby highlights shown at the bottom of a place card. */
+export interface NearbyHighlight {
+  name: string
+  distance: string
+  whyVisit: string
+  category: Category
+}
+
+/** Neighborhood/area stats shown in the Area Info sidebar during tours. */
+export interface AreaInfo {
+  name: string
+  population?: string
+  density?: string
+  medianIncome?: string
+  industries?: string[]
+  climate?: string
+  character?: string
+  famousFor?: string[]
+}
+
+/** Content for the "Local Context" tab — neighborhood feel + surrounding area. */
+export interface LocalContext {
+  text: string
+  stats?: PlaceStat[]
+}
+
 export interface Place {
   id: string
   name: string
@@ -36,10 +78,14 @@ export interface Place {
   lng: number
   /** A friendly sentence or two on why you'd go. */
   blurb: string
-  /** Optional photo URL. Panels work fine without it. */
+  /** Primary photo URL (hero image). */
   image?: string
+  /** Additional gallery photos (shown in swipeable gallery). */
+  images?: string[]
   /** A few quick facts shown as chips on the detail card. */
   facts?: string[]
+  /** Semantic tags shown as chips (🏛 Historic, 🌉 Engineering, etc.). */
+  tags?: PlaceTag[]
 
   // ── Richer, informative detail (all optional; shown in panel sections) ──
   /** A short paragraph of real history / context. */
@@ -54,6 +100,12 @@ export interface Place {
   bestTime?: string
   /** An insider tip a local would tell you. */
   localTip?: string
+  /** Local context tab: surrounding neighborhood + area culture. */
+  localContext?: LocalContext
+  /** "Look Closer" sub-points of interest around this place. */
+  subPOIs?: SubPOI[]
+  /** Up to 3 nearby highlights shown at the bottom of the card. */
+  nearby?: NearbyHighlight[]
 
   /** Camera framing used when flying to this place. */
   view: CameraView
@@ -78,6 +130,10 @@ export interface TourStop {
   funFact?: string
   /** Optional override; falls back to the place's own view. */
   view?: CameraView
+  /** Area info shown in the sidebar while at this stop. */
+  areaInfo?: AreaInfo
+  /** Shown in the flight HUD while flying toward this stop. */
+  flyingOver?: string
 }
 
 export interface Tour {

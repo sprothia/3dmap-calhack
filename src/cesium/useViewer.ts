@@ -63,6 +63,29 @@ export function useViewer(intro: CameraView): UseViewerResult {
       ctrl.inertiaTranslate = 0.85
       ctrl.zoomFactor = 6 // bigger zoom steps per wheel tick (default 5)
 
+      // Explicit pinch-to-zoom + two-finger rotate (trackpad and touch).
+      ctrl.zoomEventTypes = [
+        Cesium.CameraEventType.WHEEL,
+        Cesium.CameraEventType.PINCH,
+      ]
+      ctrl.rotateEventTypes = [
+        Cesium.CameraEventType.LEFT_DRAG,
+      ]
+      ctrl.tiltEventTypes = [
+        Cesium.CameraEventType.RIGHT_DRAG,
+        Cesium.CameraEventType.PINCH,
+        {
+          eventType: Cesium.CameraEventType.LEFT_DRAG,
+          modifier: Cesium.KeyboardEventModifier.CTRL,
+        },
+      ]
+      ctrl.lookEventTypes = [
+        {
+          eventType: Cesium.CameraEventType.LEFT_DRAG,
+          modifier: Cesium.KeyboardEventModifier.SHIFT,
+        },
+      ]
+
       if (cancelled) {
         v.destroy()
         return
