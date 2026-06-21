@@ -17,6 +17,8 @@ export default {
       fontFamily: {
         display: ['"Georgia"', 'serif'],
         body: ['"Inter"', 'system-ui', 'sans-serif'],
+        grotesk: ['"Space Grotesk"', 'sans-serif'],
+        mono: ['"Space Mono"', 'ui-monospace', 'monospace'],
       },
     },
   },

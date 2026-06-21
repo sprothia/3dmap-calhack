@@ -17,6 +17,7 @@ export const WORLD_CITIES: WorldCity[] = [
   { name: 'New York', country: 'USA' },
   { name: 'Los Angeles', country: 'USA' },
   { name: 'Chicago', country: 'USA' },
+  { name: 'New Orleans', country: 'USA' },
   { name: 'Seattle', country: 'USA' },
   { name: 'Boston', country: 'USA' },
   { name: 'Miami', country: 'USA' },
