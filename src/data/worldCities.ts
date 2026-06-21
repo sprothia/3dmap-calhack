@@ -1,0 +1,72 @@
+// A worldwide list of well-known cities for the landing-page search dropdown.
+// Only `bay-area` (San Francisco) is actually supported right now; everything
+// else shows as "coming soon". `cityId` links a search entry to a real City.
+
+export interface WorldCity {
+  name: string
+  country: string
+  /** Linked City id if supported, else undefined (coming soon). */
+  cityId?: string
+}
+
+export const WORLD_CITIES: WorldCity[] = [
+  { name: 'San Francisco', country: 'USA', cityId: 'bay-area' },
+  { name: 'San Jose', country: 'USA', cityId: 'bay-area' },
+  { name: 'Oakland', country: 'USA', cityId: 'bay-area' },
+  { name: 'Bay Area', country: 'USA', cityId: 'bay-area' },
+  { name: 'New York', country: 'USA' },
+  { name: 'Los Angeles', country: 'USA' },
+  { name: 'Chicago', country: 'USA' },
+  { name: 'Seattle', country: 'USA' },
+  { name: 'Boston', country: 'USA' },
+  { name: 'Miami', country: 'USA' },
+  { name: 'Austin', country: 'USA' },
+  { name: 'Washington, D.C.', country: 'USA' },
+  { name: 'Toronto', country: 'Canada' },
+  { name: 'Vancouver', country: 'Canada' },
+  { name: 'Montreal', country: 'Canada' },
+  { name: 'Mexico City', country: 'Mexico' },
+  { name: 'London', country: 'UK' },
+  { name: 'Paris', country: 'France' },
+  { name: 'Berlin', country: 'Germany' },
+  { name: 'Amsterdam', country: 'Netherlands' },
+  { name: 'Madrid', country: 'Spain' },
+  { name: 'Barcelona', country: 'Spain' },
+  { name: 'Rome', country: 'Italy' },
+  { name: 'Lisbon', country: 'Portugal' },
+  { name: 'Vienna', country: 'Austria' },
+  { name: 'Zurich', country: 'Switzerland' },
+  { name: 'Stockholm', country: 'Sweden' },
+  { name: 'Copenhagen', country: 'Denmark' },
+  { name: 'Dublin', country: 'Ireland' },
+  { name: 'Prague', country: 'Czechia' },
+  { name: 'Athens', country: 'Greece' },
+  { name: 'Istanbul', country: 'Türkiye' },
+  { name: 'Moscow', country: 'Russia' },
+  { name: 'Dubai', country: 'UAE' },
+  { name: 'Tel Aviv', country: 'Israel' },
+  { name: 'Mumbai', country: 'India' },
+  { name: 'Delhi', country: 'India' },
+  { name: 'Bangalore', country: 'India' },
+  { name: 'Bangkok', country: 'Thailand' },
+  { name: 'Singapore', country: 'Singapore' },
+  { name: 'Hong Kong', country: 'China' },
+  { name: 'Shanghai', country: 'China' },
+  { name: 'Beijing', country: 'China' },
+  { name: 'Tokyo', country: 'Japan' },
+  { name: 'Kyoto', country: 'Japan' },
+  { name: 'Seoul', country: 'South Korea' },
+  { name: 'Sydney', country: 'Australia' },
+  { name: 'Melbourne', country: 'Australia' },
+  { name: 'Auckland', country: 'New Zealand' },
+  { name: 'Cape Town', country: 'South Africa' },
+  { name: 'Cairo', country: 'Egypt' },
+  { name: 'Nairobi', country: 'Kenya' },
+  { name: 'Lagos', country: 'Nigeria' },
+  { name: 'São Paulo', country: 'Brazil' },
+  { name: 'Rio de Janeiro', country: 'Brazil' },
+  { name: 'Buenos Aires', country: 'Argentina' },
+  { name: 'Lima', country: 'Peru' },
+  { name: 'Bogotá', country: 'Colombia' },
+  { name: 'Santiago', country: 'Chile' },
+]

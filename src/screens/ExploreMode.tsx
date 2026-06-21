@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { Category, City, Place, SubPOI } from '../data/types'
 import type { useViewer } from '../cesium/useViewer'
 import { addPins, type PinHandle } from '../cesium/pins'
@@ -16,6 +16,7 @@ interface ExploreModeProps {
 export default function ExploreMode({ city, viewer }: ExploreModeProps) {
   const pinsRef = useRef<PinHandle | null>(null)
   const orbitStopRef = useRef<(() => void) | null>(null)
+  const [cardHidden, setCardHidden] = useState(false)
   const selectedPlaceId = useAppStore((s) => s.selectedPlaceId)
   const selectPlace = useAppStore((s) => s.selectPlace)
   const active = useScene((s) => s.activeCategories) as Category[] | null
@@ -86,10 +87,16 @@ export default function ExploreMode({ city, viewer }: ExploreModeProps) {
     [active, setActive],
   )
 
+  // Reset card visibility whenever a different place is selected.
+  useEffect(() => {
+    setCardHidden(false)
+  }, [selectedPlaceId])
+
   const lookAround = useCallback(() => {
     const v = viewer.viewerRef.current
     if (!v || !selectedPlace) return
     stopOrbit()
+    setCardHidden(true) // get the card out of the way of the view
     orbitStopRef.current = orbitAround(v, selectedPlace.view)
   }, [viewer.viewerRef, selectedPlace, stopOrbit])
 
@@ -97,6 +104,7 @@ export default function ExploreMode({ city, viewer }: ExploreModeProps) {
     const v = viewer.viewerRef.current
     if (!v || !selectedPlace) return
     stopOrbit()
+    setCardHidden(true)
     flyToStreetLevel(v, selectedPlace.view)
   }, [viewer.viewerRef, selectedPlace, stopOrbit])
 
@@ -105,6 +113,7 @@ export default function ExploreMode({ city, viewer }: ExploreModeProps) {
       const v = viewer.viewerRef.current
       if (!v) return
       stopOrbit()
+      setCardHidden(true)
       flyToView(v, sub.view, 2)
     },
     [viewer.viewerRef, stopOrbit],
@@ -122,7 +131,7 @@ export default function ExploreMode({ city, viewer }: ExploreModeProps) {
           selectedPlaceId={selectedPlaceId}
         />
       )}
-      {selectedPlace && (
+      {selectedPlace && !cardHidden && (
         <PlacePanel
           place={selectedPlace}
           onClose={() => {
@@ -133,6 +142,18 @@ export default function ExploreMode({ city, viewer }: ExploreModeProps) {
           onStreetView={streetView}
           onFlyToSubPOI={flyToSubPOI}
         />
+      )}
+
+      {/* Pop the card back up after Look around / Street view */}
+      {selectedPlace && cardHidden && (
+        <button
+          onClick={() => setCardHidden(false)}
+          className="pointer-events-auto absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-cream px-5 py-2.5 text-sm font-semibold text-ink shadow-lg ring-1 ring-black/5 transition hover:-translate-y-0.5 active:scale-95"
+          style={{ animation: 'fadeInPlace 0.3s ease both' }}
+        >
+          <span className="text-base">↑</span>
+          {selectedPlace.name}
+        </button>
       )}
     </>
   )

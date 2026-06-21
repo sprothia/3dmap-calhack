@@ -62,6 +62,7 @@ export default function TourMode({ city, viewer }: TourModeProps) {
   const [showFact, setShowFact] = useState(false)
   const [autoPlay, setAutoPlay] = useState(false)
   const [stopTab, setStopTab] = useState<StopTab>('overview')
+  const [cardHidden, setCardHidden] = useState(false)
   const [flightProgress, setFlightProgress] = useState(0)
   const pinsRef = useRef<PinHandle | null>(null)
   const rideRef = useRef<RideCamera | null>(null)
@@ -98,6 +99,7 @@ export default function TourMode({ city, viewer }: TourModeProps) {
         setBeat(0)
         setShowFact(false)
         setStopTab('overview')
+        setCardHidden(false)
         setFlightProgress(0)
         if (flightTimerRef.current) {
           window.clearInterval(flightTimerRef.current)
@@ -185,6 +187,7 @@ export default function TourMode({ city, viewer }: TourModeProps) {
     const v = viewer.viewerRef.current
     if (!v || !currentView) return
     stopOrbit()
+    setCardHidden(true)
     orbitStopRef.current = orbitAround(v, currentView)
   }, [viewer.viewerRef, currentView, stopOrbit])
 
@@ -192,6 +195,7 @@ export default function TourMode({ city, viewer }: TourModeProps) {
     const v = viewer.viewerRef.current
     if (!v || !currentView) return
     stopOrbit()
+    setCardHidden(true)
     flyToStreetLevel(v, currentView)
   }, [viewer.viewerRef, currentView, stopOrbit])
 
@@ -244,8 +248,9 @@ export default function TourMode({ city, viewer }: TourModeProps) {
   const atLastStop = index === tour.stops.length - 1
   const atVeryStart = index === 0 && beat === 0
   const atVeryEnd = atLastStop && lastBeat
-  const nextStop = !atLastStop ? tour.stops[index + 1] : null
-  const nextPlace = nextStop ? placeById(nextStop.placeId) : null
+  // While traveling, `index` is ALREADY the destination stop (advance() set it
+  // before goToStop). So the place we're flying toward is the current stop.
+  const destPlace = placeById(stop.placeId)
 
   const allImages = [
     ...(place?.image ? [place.image] : []),
@@ -256,42 +261,79 @@ export default function TourMode({ city, viewer }: TourModeProps) {
     <>
       {/* Intro */}
       {viewer.ready && phase === 'intro' && (
-        <div className="pointer-events-auto absolute inset-0 z-40 flex items-center justify-center bg-ink/40 backdrop-blur-sm">
-          <div className="max-w-md rounded-3xl border border-cocoa/20 bg-cream/97 p-8 text-center shadow-2xl" style={{ animation: 'fadeInPlace 0.4s ease both' }}>
-            <div className="text-5xl">✈️</div>
-            <h1 className="mt-3 font-display text-3xl font-bold text-ink">{tour.name}</h1>
-            <p className="mt-3 text-cocoa">{tour.blurb}</p>
-            <p className="mt-4 text-xs uppercase tracking-widest text-cocoa/70">
-              {tour.stops.length} stops · a scenic Bay flyover
-            </p>
-            <button
-              onClick={() => setPhase('riding')}
-              className="mt-6 rounded-full bg-sunset px-6 py-3 text-sm font-semibold text-cream shadow-lg transition hover:bg-[#d9632d]"
-            >
-              ✈️ Take off →
-            </button>
-            <button
-              onClick={() => selectMode('explore')}
-              className="mt-3 block w-full text-xs text-cocoa transition hover:text-ink"
-            >
-              or roam the map yourself
-            </button>
+        <div className="pointer-events-auto absolute inset-0 z-40 flex items-center justify-center bg-ink/75 backdrop-blur-md">
+          <div
+            className="relative w-[28rem] max-w-[calc(100vw-2rem)] overflow-hidden rounded-[2rem] bg-cream shadow-2xl ring-1 ring-black/10"
+            style={{ animation: 'popIn 0.45s cubic-bezier(0.34,1.56,0.64,1) both' }}
+          >
+            {/* Sky banner with animated plane */}
+            <div className="relative h-28 overflow-hidden bg-gradient-to-b from-[#7fb2e6] to-[#bfe0f5]">
+              <div className="absolute inset-0 opacity-60">
+                <div className="cloud cloud-a" />
+                <div className="cloud cloud-b" />
+              </div>
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-5xl drop-shadow-lg" style={{ animation: 'planeBob 2.5s ease-in-out infinite' }}>
+                ✈️
+              </div>
+            </div>
+
+            <div className="px-8 pb-8 pt-6 text-center">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-sunset">
+                Guided flight
+              </p>
+              <h1 className="mt-1 font-display text-3xl font-bold text-ink">
+                {tour.name}
+              </h1>
+              <p className="mt-3 text-[15px] leading-relaxed text-cocoa">
+                {tour.blurb}
+              </p>
+              <div className="mt-4 flex items-center justify-center gap-2 text-xs font-medium text-cocoa">
+                <span className="rounded-full bg-parchment px-3 py-1">
+                  {tour.stops.length} stops
+                </span>
+                <span className="rounded-full bg-parchment px-3 py-1">
+                  ~5 min
+                </span>
+                <span className="rounded-full bg-parchment px-3 py-1">
+                  scenic flyover
+                </span>
+              </div>
+
+              <button
+                onClick={() => setPhase('riding')}
+                className="group mt-6 inline-flex items-center gap-2 rounded-full bg-sunset px-8 py-3.5 text-base font-bold text-cream shadow-lg shadow-sunset/30 transition hover:bg-[#d9632d] hover:shadow-xl hover:shadow-sunset/40 active:scale-95"
+              >
+                <span className="inline-block transition-transform group-hover:translate-x-1 group-hover:-translate-y-0.5">
+                  ✈️
+                </span>
+                Take off
+              </button>
+              <button
+                onClick={() => selectMode('explore')}
+                className="mt-3 block w-full text-xs text-cocoa/70 transition hover:text-ink"
+              >
+                or roam the map yourself
+              </button>
+            </div>
           </div>
         </div>
       )}
 
       {/* Outro */}
       {viewer.ready && phase === 'outro' && (
-        <div className="pointer-events-auto absolute inset-0 z-40 flex items-center justify-center bg-ink/40 backdrop-blur-sm">
-          <div className="max-w-md rounded-3xl border border-cocoa/20 bg-cream/97 p-8 text-center shadow-2xl" style={{ animation: 'fadeInPlace 0.4s ease both' }}>
-            <div className="text-5xl">🛬</div>
+        <div className="pointer-events-auto absolute inset-0 z-40 flex items-center justify-center bg-ink/75 backdrop-blur-md">
+          <div
+            className="w-[28rem] max-w-[calc(100vw-2rem)] overflow-hidden rounded-[2rem] bg-cream p-8 text-center shadow-2xl ring-1 ring-black/10"
+            style={{ animation: 'popIn 0.45s cubic-bezier(0.34,1.56,0.64,1) both' }}
+          >
+            <div className="text-5xl" style={{ animation: 'planeBob 2.5s ease-in-out infinite' }}>🛬</div>
             <h1 className="mt-3 font-display text-3xl font-bold text-ink">Coming in to land</h1>
             <p className="mt-3 text-cocoa">
               You flew the whole Bay — the bridge, the city, the coast, all {tour.stops.length} sights.
             </p>
             <button
               onClick={() => selectMode('explore')}
-              className="mt-6 rounded-full bg-sunset px-6 py-3 text-sm font-semibold text-cream shadow-lg transition hover:bg-[#d9632d]"
+              className="mt-6 rounded-full bg-sunset px-6 py-3 text-sm font-semibold text-cream shadow-lg transition hover:bg-[#d9632d] active:scale-95"
             >
               Roam the map yourself →
             </button>
@@ -413,7 +455,7 @@ export default function TourMode({ city, viewer }: TourModeProps) {
                 </p>
 
                 <h2 className="font-display text-4xl font-bold text-cream text-center px-8 drop-shadow-lg">
-                  {nextPlace?.name ?? 'next stop'}
+                  {destPlace?.name ?? 'next stop'}
                 </h2>
 
                 {stop.flyingOver && (
@@ -423,23 +465,23 @@ export default function TourMode({ city, viewer }: TourModeProps) {
                 )}
 
                 {/* Destination preview card */}
-                {nextPlace && (
+                {destPlace && (
                   <div
                     className="mt-8 flex items-center gap-4 rounded-2xl border border-white/10 bg-white/8 px-5 py-3 backdrop-blur-sm max-w-sm w-full mx-4"
                     style={{ animation: 'fadeInPlace 0.8s ease 0.3s both' }}
                   >
-                    {nextPlace.image && (
+                    {destPlace.image && (
                       <img
-                        src={nextPlace.image}
-                        alt={nextPlace.name}
+                        src={destPlace.image}
+                        alt={destPlace.name}
                         className="h-14 w-20 shrink-0 rounded-xl object-cover border border-white/10"
                         onError={(e) => ((e.currentTarget as HTMLImageElement).style.display = 'none')}
                       />
                     )}
                     <div className="min-w-0">
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-cream/50">Next stop</p>
-                      <p className="mt-0.5 font-semibold text-cream text-[15px] leading-tight">{nextPlace.name}</p>
-                      <p className="mt-0.5 text-[12px] text-cream/60 line-clamp-1">{nextPlace.blurb}</p>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-cream/50">Destination</p>
+                      <p className="mt-0.5 font-semibold text-cream text-[15px] leading-tight">{destPlace.name}</p>
+                      <p className="mt-0.5 text-[12px] text-cream/60 line-clamp-1">{destPlace.blurb}</p>
                     </div>
                   </div>
                 )}
@@ -463,8 +505,20 @@ export default function TourMode({ city, viewer }: TourModeProps) {
             <AreaInfoSidebar area={stop.areaInfo} />
           )}
 
+          {/* Pop the card back up after Look around / Street view */}
+          {!traveling && cardHidden && (
+            <button
+              onClick={() => setCardHidden(false)}
+              className="pointer-events-auto absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-cream px-5 py-2.5 text-sm font-semibold text-ink shadow-lg ring-1 ring-black/5 transition hover:-translate-y-0.5 active:scale-95"
+              style={{ animation: 'fadeInPlace 0.3s ease both' }}
+            >
+              <span className="text-base">↑</span>
+              {place?.name ?? 'Show details'}
+            </button>
+          )}
+
           {/* ── STATION CARD (parked) ── */}
-          {!traveling && (
+          {!traveling && !cardHidden && (
             <div className="pointer-events-auto absolute bottom-6 left-1/2 z-20 w-[42rem] max-w-[calc(100vw-2rem)] -translate-x-1/2 overflow-hidden rounded-2xl border border-cocoa/20 bg-cream/95 shadow-xl backdrop-blur">
               {/* Image gallery */}
               {allImages.length > 0 && (

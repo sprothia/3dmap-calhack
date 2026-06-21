@@ -16,7 +16,7 @@ function App() {
   return (
     // Map needs a definite full-viewport height for the Cesium canvas;
     // the picker screens scroll within min-height.
-    <div className={onMap ? 'h-screen w-screen overflow-hidden' : 'min-h-full'}>
+    <div className={onMap ? 'h-screen w-screen overflow-hidden' : 'min-h-screen'}>
       {screen === 'pick-city' && <CityPicker />}
       {screen === 'pick-mode' && <ModePicker />}
 

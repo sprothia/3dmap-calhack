@@ -30,8 +30,6 @@ const places: Place[] = [
     image:
       'https://commons.wikimedia.org/wiki/Special:FilePath/San_Francisco_Ferry_Building_%28cropped%29.jpg?width=640',
     images: [
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Ferry_Building_and_the_Bay_Bridge.jpg?width=640',
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Ferry_Building_Marketplace_Interior.jpg?width=640',
       'https://commons.wikimedia.org/wiki/Special:FilePath/Embarcadero_San_Francisco.jpg?width=640',
     ],
     history:
@@ -90,9 +88,9 @@ const places: Place[] = [
       'https://commons.wikimedia.org/wiki/Special:FilePath/Golden_Gate_Bridge_as_seen_from_Battery_East.jpg?width=640',
     images: [
       'https://commons.wikimedia.org/wiki/Special:FilePath/GoldenGateBridge-001.jpg?width=640',
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Golden_Gate_Bridge_under_fog_2.JPG?width=640',
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Golden_Gate_Bridge_Mar_15_2008.jpg?width=640',
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Golden_Gate_Bridge_at_night_2015.jpg?width=640',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Below_Golden_Gate_Bridge.jpeg?width=640',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/GG-ftpoint-bridge-2_b.jpg?width=640',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/GG-bridge-cable.jpg?width=640',
     ],
     history:
       'When it opened in 1937 it was the longest suspension bridge in the world. Engineer Joseph Strauss spent over a decade fighting skeptics who said a span across the foggy, current-ripped strait was impossible. It held the length record for 27 years.',
@@ -153,9 +151,8 @@ const places: Place[] = [
     image:
       'https://commons.wikimedia.org/wiki/Special:FilePath/Painted_Ladies_San_Francisco_January_2013_panorama_2.jpg?width=640',
     images: [
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Painted_Ladies_close.jpg?width=640',
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Alamo_Square_Sept_2011_panorama_2.jpg?width=640',
-      'https://commons.wikimedia.org/wiki/Special:FilePath/SF_Victorian_house.jpg?width=640',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Painted_ladies.jpg?width=640',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Alamo_Square%2C_San_Francisco.jpg?width=640',
     ],
     history:
       'This row of seven Victorian houses on Steiner Street was built between 1892 and 1896. Their bright multi-color paint jobs -- which earned the "Painted Ladies" nickname in the 1970s -- set against the modern skyline make them an icon of the city.',
@@ -205,9 +202,9 @@ const places: Place[] = [
     image:
       'https://commons.wikimedia.org/wiki/Special:FilePath/Pier_39_in_2021.jpg?width=640',
     images: [
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Sea_Lions_at_Pier_39_San_Francisco.jpg?width=640',
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Fishermans_Wharf_SF.jpg?width=640',
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Clam_chowder_sourdough_bowl.jpg?width=640',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Pier_39_at_Dusk%2C_SF%2C_CA%2C_jjron_25.03.2012.jpg?width=640',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/San_Francisco_Pier_39_Old_Port_Gate.jpg?width=640',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/San_Francisco_from_Forbes_Island_pier_39%2C_544.jpg?width=640',
     ],
     history:
       'Pier 39 opened in 1978 on a reclaimed cargo pier. Its fame came by accident: months after the 1989 Loma Prieta earthquake, dozens of California sea lions hauled out onto the marina docks and never left. Today hundreds bask here.',
@@ -251,6 +248,9 @@ const places: Place[] = [
     facts: ['Eight hairpin turns', 'Built 1922', 'Russian Hill'],
     image:
       'https://commons.wikimedia.org/wiki/Special:FilePath/Lombard_Street_2020.jpg?width=640',
+    images: [
+      'https://commons.wikimedia.org/wiki/Special:FilePath/LombardStreet.jpg?width=640',
+    ],
     view: defaultView(37.8021, -122.4187, 300),
   },
   {
@@ -264,6 +264,9 @@ const places: Place[] = [
     facts: ['Built 1933', '210 ft tall', 'WPA-era murals inside'],
     image:
       'https://commons.wikimedia.org/wiki/Special:FilePath/Coit_Tower_1.jpg?width=640',
+    images: [
+      'https://commons.wikimedia.org/wiki/Special:FilePath/17_30_085_coit_tower.jpg?width=640',
+    ],
     view: defaultView(37.8024, -122.4058, 200),
   },
   {
@@ -277,6 +280,9 @@ const places: Place[] = [
     facts: ['Est. 1848', 'Oldest in N. America', 'Dragon Gate entrance'],
     image:
       'https://commons.wikimedia.org/wiki/Special:FilePath/San_Francisco_China_Town_MC.jpg?width=640',
+    images: [
+      'https://commons.wikimedia.org/wiki/Special:FilePath/0140_Six_Companies_%2841556221022%29.jpg?width=640',
+    ],
     view: defaultView(37.7941, -122.4078, 180),
   },
   {
@@ -296,9 +302,9 @@ const places: Place[] = [
     image:
       'https://commons.wikimedia.org/wiki/Special:FilePath/Twin_Peaks_2022_Aerial.png?width=640',
     images: [
-      'https://commons.wikimedia.org/wiki/Special:FilePath/San_Francisco_from_Twin_Peaks_January_2013_panorama_5.jpg?width=640',
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Twin_Peaks_from_Eureka_Valley.jpg?width=640',
-      'https://commons.wikimedia.org/wiki/Special:FilePath/SF_night_twin_peaks.jpg?width=640',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Twinpeaks.jpg?width=640',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Twin_Peaks_Blvd_closure_pedestrian_road.jpg?width=640',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/SF_From_Marin_Highlands3.jpg?width=640',
     ],
     history:
       'These two undeveloped hills near the geographic center of San Francisco rise to about 922 feet -- among the highest points in the city. Left wild while the rest of SF was built up, they offer the broadest view in town.',
@@ -342,6 +348,9 @@ const places: Place[] = [
     facts: ['Opened 1905', 'Skyline views', 'Mission District'],
     image:
       'https://commons.wikimedia.org/wiki/Special:FilePath/Dolores_Park_May_2025.jpg?width=640',
+    images: [
+      'https://commons.wikimedia.org/wiki/Special:FilePath/DoloresParkPanorama.jpg?width=640',
+    ],
     view: defaultView(37.7596, -122.4269, 40),
   },
   {
@@ -376,10 +385,9 @@ const places: Place[] = [
       { emoji: '🥾', label: 'Hiking' },
     ],
     images: [
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Sutro_Bath_ruins%2C_SF.jpg?width=640',
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Lands_End_Coastal_Trail.jpg?width=640',
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Coastal_Trail_and_Golden_Gate_Bridge%2C_April_2019.JPG?width=640',
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Lands_End_Trail_San_Francisco.jpg?width=640',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Panorama_at_Land%27s_End_San_Francisco.jpg?width=640',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Lands_End_Lookout_pano.jpg?width=640',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Lands_End_Labyrinthe.jpg?width=640',
     ],
     localContext: {
       text: "Lands End sits in the Outer Richmond, one of SF\'s most underrated neighborhoods -- foggy, residential, packed with dim sum and Vietnamese spots. The trail itself feels genuinely wild, nothing like a city park. Sutro Baths ruins are eerie and spectacular at sunset when ocean waves surge through the concrete pools.",
@@ -441,10 +449,9 @@ const places: Place[] = [
     image:
       'https://commons.wikimedia.org/wiki/Special:FilePath/California-06241_-_In_front_of_museum_%2820449897948%29.jpg?width=640',
     images: [
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Japanese_Tea_Garden,_GGP.jpg?width=640',
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Stow_Lake_-_Golden_Gate_Park.jpg?width=640',
-      'https://commons.wikimedia.org/wiki/Special:FilePath/American_Bison_in_Golden_Gate_Park.jpg?width=640',
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Conservatory_Valley_Golden_Gate_Park.jpg?width=640',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/10%2C_Hippie_Hill.jpg?width=640',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/California_Academy_of_Sciences_%28TK2%29.JPG?width=640',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Conservatory_of_Flowers_-_panoramio_-_harley_photo.jpg?width=640',
     ],
     history:
       'Begun in 1871 on barren sand dunes, Golden Gate Park was an act of sheer will -- gardener John McLaren spent 56 years turning windswept dunes into a thousand acres of greenery. At 1,017 acres it\'s 20% larger than NYC\'s Central Park.',
@@ -496,9 +503,9 @@ const places: Place[] = [
     image:
       'https://commons.wikimedia.org/wiki/Special:FilePath/Oracle_Park_2021.jpg?width=640',
     images: [
-      'https://commons.wikimedia.org/wiki/Special:FilePath/Oracle_Park_aerial_view.jpg?width=640',
-      'https://commons.wikimedia.org/wiki/Special:FilePath/SF_Giants_game_Oracle_Park.jpg?width=640',
-      'https://commons.wikimedia.org/wiki/Special:FilePath/McCovey_Cove_San_Francisco.jpg?width=640',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/AT%26T_Park%2C_San_Francisco_at_night.jpg?width=640',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Athletics_vs_San_Francisco_Giants_2025.jpg?width=640',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/AT%26T_Park_-_Coke_bottle_and_glove.jpg?width=640',
     ],
     history:
       'Opened in 2000 as the Giants\' first privately financed ballpark in decades, it sits right on the bay. Its short right-field wall drops straight into the water, creating "McCovey Cove," where kayakers wait to fish out home-run balls.',
@@ -542,6 +549,9 @@ const places: Place[] = [
     facts: ['Rainbow crosswalks', 'Castro Theatre (1922)', 'Lively nightlife'],
     image:
       'https://commons.wikimedia.org/wiki/Special:FilePath/Castro%2C_San_Francisco%2C_CA.jpg?width=640',
+    images: [
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Entering_the_Castro_district%2C_San_Francisco_%2831984322697%29.jpg?width=640',
+    ],
     view: defaultView(37.7609, -122.435, 90),
   },
   {
@@ -555,6 +565,9 @@ const places: Place[] = [
     facts: ['Little Italy', 'Beat Generation home', 'Broadway bar strip'],
     image:
       'https://commons.wikimedia.org/wiki/Special:FilePath/North_Beach%2C_San_Francisco.jpg?width=640',
+    images: [
+      'https://commons.wikimedia.org/wiki/Special:FilePath/SF_Filbert_St_North_Beach_CA.jpg?width=640',
+    ],
     view: defaultView(37.7999, -122.4097, 180),
   },
   {
@@ -568,6 +581,9 @@ const places: Place[] = [
     facts: ['Murals + nightlife', 'Valencia St bars', 'Best late-night tacos'],
     image:
       'https://commons.wikimedia.org/wiki/Special:FilePath/Mission_High_School_%28cropped%29.jpg?width=640',
+    images: [
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Balmy_Alley.jpg?width=640',
+    ],
     view: defaultView(37.7599, -122.4148, 90),
   },
 
@@ -583,6 +599,9 @@ const places: Place[] = [
     facts: ['Across the bridge', 'Famous houseboats', 'Ferry from SF'],
     image:
       'https://commons.wikimedia.org/wiki/Special:FilePath/Sausalito.jpg?width=640',
+    images: [
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Gabrielson_Park.jpg?width=640',
+    ],
     view: defaultView(37.8591, -122.4853, 160),
   },
   {
@@ -596,6 +615,9 @@ const places: Place[] = [
     facts: ['Old-growth redwoods', 'Up to 258 ft tall', 'Nat\'l Monument 1908'],
     image:
       'https://commons.wikimedia.org/wiki/Special:FilePath/Muir_Woods_National_Monument_%2847879029461%29.jpg?width=640',
+    images: [
+      'https://commons.wikimedia.org/wiki/Special:FilePath/MUWO4193.JPG?width=640',
+    ],
     view: defaultView(37.8959, -122.5808, 0),
   },
 
@@ -609,6 +631,11 @@ const places: Place[] = [
     blurb:
       'The northern terminus of Caltrain at 4th & King -- where the Peninsula commute begins. All aboard southbound.',
     facts: ['4th & King', 'Caltrain terminus', 'Northern end of the line'],
+    image:
+      'https://commons.wikimedia.org/wiki/Special:FilePath/4th_and_King_Station.jpg?width=640',
+    images: [
+      'https://commons.wikimedia.org/wiki/Special:FilePath/ACE_Bombardier_BiLevel_IX_cab_car_at_ACE_Bombardier_BiLevel_IX_cab_car_at_San_Jose_Diridon.jpg?width=640',
+    ],
     view: defaultView(37.7765, -122.3947, 180),
   },
   {
@@ -620,6 +647,11 @@ const places: Place[] = [
     blurb:
       'A key transfer point where Caltrain meets BART and SFO is a stop away -- gateway between the city and the airport.',
     facts: ['Caltrain + BART', 'Near SFO', 'Major transfer hub'],
+    image:
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Millbrae_California.jpg?width=640',
+    images: [
+      'https://commons.wikimedia.org/wiki/Special:FilePath/SF_From_Marin_Highlands3.jpg?width=640',
+    ],
     view: defaultView(37.6, -122.3869, 180),
   },
   {
@@ -631,6 +663,11 @@ const places: Place[] = [
     blurb:
       'A leafy downtown of cafes and boutiques along Burlingame Avenue, with the bay shoreline trail just to the east.',
     facts: ['Burlingame Ave', 'Tree-lined downtown', 'Bayfront trail'],
+    image:
+      'https://commons.wikimedia.org/wiki/Special:FilePath/BBB2.jpg?width=640',
+    images: [
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Burlingame_Library.JPG?width=640',
+    ],
     view: defaultView(37.5793, -122.345, 180),
   },
   {
@@ -642,6 +679,11 @@ const places: Place[] = [
     blurb:
       'The Peninsula\'s busy midpoint -- a walkable downtown, Central Park\'s Japanese garden, and great mixed food.',
     facts: ['Central Park garden', 'Walkable downtown', 'Peninsula midpoint'],
+    image:
+      'https://commons.wikimedia.org/wiki/Special:FilePath/MCB-san-mateo-aerial_%28cropped%29.jpg?width=640',
+    images: [
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Central_Park_San_Mateo_CA.jpg?width=640',
+    ],
     view: defaultView(37.5685, -122.3239, 180),
   },
   {
@@ -653,6 +695,11 @@ const places: Place[] = [
     blurb:
       'Once a sleepy port, now a buzzing downtown of restaurants, a movie plaza, and the slogan "Climate Best by Government Test."',
     facts: ['Lively dining plaza', 'Deep-water port', 'Sunny microclimate'],
+    image:
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Redwoodcitypanorama.jpg?width=640',
+    images: [
+      'https://commons.wikimedia.org/wiki/Special:FilePath/City_Hall_Redwood_City_May_2011.jpg?width=640',
+    ],
     view: defaultView(37.4855, -122.2319, 180),
   },
   {
@@ -664,6 +711,11 @@ const places: Place[] = [
     blurb:
       'A quiet, affluent town that\'s home to Meta\'s campus and the birthplace ground of much of Silicon Valley venture capital.',
     facts: ['Meta HQ nearby', 'Sand Hill Road VCs', 'Tree-lined streets'],
+    image:
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Downtown_Menlo_Park_California.jpg?width=640',
+    images: [
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Hoover_Tower_Stanford_January_2013.jpg?width=640',
+    ],
     view: defaultView(37.4548, -122.1825, 180),
   },
   {
@@ -677,6 +729,9 @@ const places: Place[] = [
     facts: ['Founded 1885', '8,180 acres', 'Hoover Tower landmark'],
     image:
       'https://commons.wikimedia.org/wiki/Special:FilePath/MCB-san-mateo-aerial_%28cropped%29.jpg?width=640',
+    images: [
+      'https://commons.wikimedia.org/wiki/Special:FilePath/4th_and_King_Station.jpg?width=640',
+    ],
     view: defaultView(37.4275, -122.1697, 0),
   },
   {
@@ -688,6 +743,11 @@ const places: Place[] = [
     blurb:
       'University Avenue\'s leafy strip of cafes and bookshops -- the unofficial main street of Silicon Valley.',
     facts: ['University Ave', 'Next to Stanford', 'Startup birthplace'],
+    image:
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Palo_Alto_Baylands_January_2013_004_edit.jpg?width=640',
+    images: [
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Caltrain_bikes_palo_alto.jpg?width=640',
+    ],
     view: defaultView(37.4441, -122.1607, 90),
   },
   {
@@ -699,6 +759,11 @@ const places: Place[] = [
     blurb:
       'A walkable downtown packed with food from every corner of the world -- the South Bay\'s best casual eating in one stretch.',
     facts: ['Global food street', 'Walkable downtown', 'Googleplex nearby'],
+    image:
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Castro_Street_Mountain_View_sidewalk.jpg?width=640',
+    images: [
+      'https://commons.wikimedia.org/wiki/Special:FilePath/Caltrain_at_Mountain_View.jpg?width=640',
+    ],
     view: defaultView(37.3939, -122.0797, 0),
   },
   {
@@ -710,6 +775,11 @@ const places: Place[] = [
     blurb:
       'The southern end of the line -- a historic 1935 station and the gateway to downtown San Jose, the valley\'s biggest city.',
     facts: ['Built 1935', 'Southern terminus', 'Gateway to San Jose'],
+    image:
+      'https://commons.wikimedia.org/wiki/Special:FilePath/San_Jose_Diridon_Station.jpg?width=640',
+    images: [
+      'https://commons.wikimedia.org/wiki/Special:FilePath/ACE_Bombardier_BiLevel_IX_cab_car_at_San_Jose_Diridon.jpg?width=640',
+    ],
     view: defaultView(37.3297, -121.9028, 0),
   },
 ]
