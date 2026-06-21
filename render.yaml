@@ -1,0 +1,21 @@
+# Render Blueprint for the Neighborhood Q&A backend (server/index.js).
+# In Render: New + > Blueprint, point at this repo, then set the secret
+# env vars (marked sync:false) in the dashboard.
+services:
+  - type: web
+    name: 3dtour-backend
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: node server/index.js
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      # Render injects PORT automatically; server/index.js already reads it.
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: BROWSERBASE_API_KEY
+        sync: false
+      - key: BROWSERBASE_PROJECT_ID
+        sync: false
