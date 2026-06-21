@@ -1,7 +1,9 @@
-import { useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import type { Place, SubPOI } from '../data/types'
 import { CATEGORY_COLOR, CATEGORY_LABEL } from '../data/categories'
 import { placeGallery } from '../data/placeImages'
+import { useNarration } from '../state/useNarration'
+import { hasDeepgramKey } from '../cesium/env'
 import ImageGallery from './ImageGallery'
 
 interface PlacePanelProps {
@@ -23,6 +25,19 @@ export default function PlacePanel({
 }: PlacePanelProps) {
   const [tab, setTab] = useState<Tab>('overview')
   const accent = CATEGORY_COLOR[place.category]
+
+  const speak = useNarration((s) => s.speak)
+  const stopNarration = useNarration((s) => s.stop)
+  const isPlaying = useNarration((s) => s.isPlaying)
+  const isLoading = useNarration((s) => s.isLoading)
+
+  // Read the place's overview + history aloud; stop when switching place / closing.
+  const narrationText = [place.blurb, place.history].filter(Boolean).join(' ')
+  useEffect(() => () => stopNarration(), [place.id, stopNarration])
+  const toggleListen = () => {
+    if (isPlaying || isLoading) stopNarration()
+    else void speak(narrationText)
+  }
 
   // Every place shows at least two photos (real first, scenic fillers after).
   const allImages = placeGallery(place, 2)
@@ -58,13 +73,25 @@ export default function PlacePanel({
 
       {/* Header */}
       <div className="shrink-0 px-5 pt-4">
-        <span
-          className="inline-block rounded-md px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide"
-          style={{ backgroundColor: accent + '1A', color: accent }}
-        >
-          {CATEGORY_LABEL[place.category]}
-        </span>
+        <div className="flex items-center gap-2 flex-wrap">
+          <span
+            className="inline-block rounded-md px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide"
+            style={{ backgroundColor: accent + '1A', color: accent }}
+          >
+            {CATEGORY_LABEL[place.category]}
+          </span>
+          {hasDeepgramKey && narrationText && (
+            <button
+              onClick={toggleListen}
+              className="inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide transition active:scale-95"
+              style={{ backgroundColor: accent + '1A', color: accent }}
+            >
+              {isLoading ? '⏳ Loading' : isPlaying ? '⏹ Stop' : '🔊 Listen'}
+            </button>
+          )}
+        </div>
         <h2 className="mt-2 font-display text-2xl font-bold leading-tight text-[#1c1917]">
+
           {place.name}
         </h2>
 

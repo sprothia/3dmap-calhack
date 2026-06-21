@@ -5,6 +5,9 @@ import { addPins, type PinHandle } from '../cesium/pins'
 import { RideCamera } from '../cesium/rideCamera'
 import { orbitAround, flyToStreetLevel } from '../cesium/camera'
 import { useAppStore } from '../state/useAppStore'
+import { useNarration } from '../state/useNarration'
+import { prefetchSpeech } from '../narration/deepgramTTS'
+import { hasDeepgramKey } from '../cesium/env'
 import { CATEGORY_CHIP, CATEGORY_LABEL } from '../data/categories'
 import AreaInfoSidebar from '../components/AreaInfoSidebar'
 import ImageGallery from '../components/ImageGallery'
@@ -69,6 +72,16 @@ export default function TourMode({ city, viewer }: TourModeProps) {
   const orbitStopRef = useRef<(() => void) | null>(null)
   const flightTimerRef = useRef<number | null>(null)
   const selectMode = useAppStore((s) => s.selectMode)
+  const speak = useNarration((s) => s.speak)
+  const stopNarration = useNarration((s) => s.stop)
+  const muted = useNarration((s) => s.muted)
+  const toggleMute = useNarration((s) => s.toggleMute)
+
+  // Keep auto-play readable inside the narration effect without resubscribing.
+  const autoPlayRef = useRef(autoPlay)
+  useEffect(() => {
+    autoPlayRef.current = autoPlay
+  }, [autoPlay])
 
   const stopOrbit = useCallback(() => {
     orbitStopRef.current?.()
@@ -225,9 +238,48 @@ export default function TourMode({ city, viewer }: TourModeProps) {
 
   useEffect(() => {
     if (!autoPlay || phase !== 'riding' || traveling) return
+    // When narration is audible it drives auto-advance (on audio end); this
+    // timer is only the fallback for the silent path (no key or muted).
+    if (hasDeepgramKey && !muted) return
     const t = window.setTimeout(() => advance(), 4200)
     return () => window.clearTimeout(t)
-  }, [autoPlay, phase, traveling, index, beat, advance])
+  }, [autoPlay, phase, traveling, index, beat, advance, muted])
+
+  // Speak the current narration beat aloud; when it finishes naturally,
+  // auto-advance if auto-play is on. Cleanup stops audio on beat/stop change,
+  // departure, mute, or unmount — so clips never overlap.
+  useEffect(() => {
+    if (!tour || !hasDeepgramKey || phase !== 'riding' || traveling) return
+    const line = beatsFor(tour.stops[index].narration)[beat]
+    if (!line) return
+    let cancelled = false
+    void speak(line).then((finished) => {
+      if (!cancelled && finished && autoPlayRef.current) advance()
+    })
+    return () => {
+      cancelled = true
+      stopNarration()
+    }
+  }, [tour, index, beat, phase, traveling, muted, speak, stopNarration, advance])
+
+  // Warm the very first clip while the intro card is on screen, so the tour
+  // opens with sound instead of a beat of silence.
+  useEffect(() => {
+    if (!tour) return
+    prefetchSpeech(beatsFor(tour.stops[0].narration)[0])
+  }, [tour])
+
+  // Stay a step ahead: synthesize the next beat (or the next stop's opener)
+  // while the current line plays, so advancing speaks instantly.
+  useEffect(() => {
+    if (!tour) return
+    const beats = beatsFor(tour.stops[index].narration)
+    if (beat < beats.length - 1) {
+      prefetchSpeech(beats[beat + 1])
+    } else if (index < tour.stops.length - 1) {
+      prefetchSpeech(beatsFor(tour.stops[index + 1].narration)[0])
+    }
+  }, [tour, index, beat])
 
   useEffect(() => {
     if (phase === 'outro') setAutoPlay(false)
@@ -415,6 +467,17 @@ export default function TourMode({ city, viewer }: TourModeProps) {
 
           {/* Top-right controls */}
           <div className="absolute right-4 top-4 z-10 flex items-center gap-2">
+            {hasDeepgramKey && (
+              <button
+                onClick={toggleMute}
+                title={muted ? 'Unmute narration' : 'Mute narration'}
+                className={`pointer-events-auto rounded-full px-3 py-1.5 text-xs font-medium shadow-md backdrop-blur transition ${
+                  muted ? 'bg-cream/90 text-cocoa hover:bg-cream' : 'bg-sunset text-cream'
+                }`}
+              >
+                {muted ? '🔇 Muted' : '🔊 Narrating'}
+              </button>
+            )}
             <button
               onClick={() => setAutoPlay((a) => !a)}
               className={`pointer-events-auto rounded-full px-3 py-1.5 text-xs font-medium shadow-md backdrop-blur transition ${
