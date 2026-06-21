@@ -266,15 +266,52 @@ export default function TourMode({ city, viewer }: TourModeProps) {
             className="relative w-[28rem] max-w-[calc(100vw-2rem)] overflow-hidden rounded-[2rem] bg-cream shadow-2xl ring-1 ring-black/10"
             style={{ animation: 'popIn 0.45s cubic-bezier(0.34,1.56,0.64,1) both' }}
           >
-            {/* Sky banner with animated plane */}
-            <div className="relative h-28 overflow-hidden bg-gradient-to-b from-[#7fb2e6] to-[#bfe0f5]">
-              <div className="absolute inset-0 opacity-60">
-                <div className="cloud cloud-a" />
-                <div className="cloud cloud-b" />
-              </div>
-              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-5xl drop-shadow-lg" style={{ animation: 'planeBob 2.5s ease-in-out infinite' }}>
-                ✈️
-              </div>
+            {/* Sleek flight banner — gradient sky, drawn flight arc, skyline */}
+            <div className="relative h-32 overflow-hidden bg-gradient-to-b from-[#bcdcf6] via-[#d6ecf8] to-[#f6ecd8]">
+              <svg
+                viewBox="0 0 448 128"
+                preserveAspectRatio="xMidYMid slice"
+                className="absolute inset-0 h-full w-full"
+              >
+                {/* soft sun */}
+                <circle cx="392" cy="34" r="22" fill="#FBE3A6" opacity="0.85" />
+                {/* flat modern clouds */}
+                <g fill="#ffffff" opacity="0.92">
+                  <g style={{ animation: 'tourCloud 16s linear infinite' }}>
+                    <ellipse cx="90" cy="40" rx="34" ry="13" />
+                    <ellipse cx="112" cy="33" rx="22" ry="14" />
+                  </g>
+                  <g style={{ animation: 'tourCloud 22s linear infinite', opacity: 0.8 }}>
+                    <ellipse cx="300" cy="64" rx="28" ry="11" />
+                    <ellipse cx="318" cy="58" rx="18" ry="12" />
+                  </g>
+                </g>
+                {/* dashed flight arc */}
+                <path
+                  d="M22 104 Q150 18 432 52"
+                  fill="none"
+                  stroke="#E8743B"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeDasharray="3 8"
+                  opacity="0.9"
+                  style={{ animation: 'dashFlow 1.4s linear infinite' }}
+                />
+                {/* plane riding the arc */}
+                <g style={{ animation: 'tourPlane 5s ease-in-out infinite' }}>
+                  <path
+                    d="M0 -7 L9 5 L0 1.8 L-9 5 Z"
+                    fill="#2F2A24"
+                    transform="translate(300 44) rotate(28)"
+                  />
+                </g>
+                {/* skyline silhouette */}
+                <path
+                  d="M0 128 V112 H22 V96 H34 V104 H52 V84 H64 V104 H86 V92 H96 V72 H108 V104 H132 V98 H150 V108 H176 V88 H188 V108 H214 V100 H230 V78 H242 V108 H300 V94 H316 V108 H344 V82 H356 V108 H392 V96 H410 V108 H448 V128 Z"
+                  fill="#2F2A24"
+                  opacity="0.22"
+                />
+              </svg>
             </div>
 
             <div className="px-8 pb-8 pt-6 text-center">

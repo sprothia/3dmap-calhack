@@ -225,7 +225,7 @@ export function initHeroMapField(svg: SVGSVGElement, hero: HTMLElement): () => v
   ].sort((p, q) => p.a + p.b - (q.a + q.b))
 
   const poly = (pts: Pt[], fill: string) =>
-    make('polygon', {
+    make<SVGPolygonElement>('polygon', {
       points: ptsStr(pts),
       fill,
       stroke: 'rgba(24,33,29,0.42)',
@@ -233,7 +233,7 @@ export function initHeroMapField(svg: SVGSVGElement, hero: HTMLElement): () => v
       'stroke-linejoin': 'round',
     })
 
-  const shadowG = make('g', {})
+  const shadowG = make<SVGGElement>('g', {})
   layerCity.appendChild(shadowG)
 
   function addWindows(
@@ -251,7 +251,7 @@ export function initHeroMapField(svg: SVGSVGElement, hero: HTMLElement): () => v
       for (let c = 0; c < cols; c++) {
         const u = (c + 0.5) / cols
         const P = lerpP(lerpP(bl, br, u), lerpP(tl, tr, u), v)
-        const dot = make('circle', {
+        const dot = make<SVGCircleElement>('circle', {
           cx: P[0].toFixed(1),
           cy: P[1].toFixed(1),
           r: '1.15',
@@ -281,10 +281,10 @@ export function initHeroMapField(svg: SVGSVGElement, hero: HTMLElement): () => v
     const t11 = proj(A2, B2, h)
     const t01 = proj(A, B2, h)
 
-    const sh = make('polygon', { points: '', fill: '#18211D', opacity: '0' })
+    const sh = make<SVGPolygonElement>('polygon', { points: '', fill: '#18211D', opacity: '0' })
     shadowG.appendChild(sh)
 
-    const g = make('g', {})
+    const g = make<SVGGElement>('g', {})
     g.style.transition = 'none'
     g.style.willChange = 'transform'
     g.appendChild(poly([t10, g10, g11, t11], '#AEB9AF'))
@@ -319,7 +319,7 @@ export function initHeroMapField(svg: SVGSVGElement, hero: HTMLElement): () => v
     })
   })
 
-  const hoverPin = make('g', { opacity: '0' })
+  const hoverPin = make<SVGGElement>('g', { opacity: '0' })
   hoverPin.appendChild(
     make('circle', { r: '9', fill: 'none', stroke: '#2A4ACB', 'stroke-width': '1.4', opacity: '0.5' }),
   )

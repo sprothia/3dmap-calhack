@@ -4,6 +4,7 @@ import type { CameraView } from '../data/types'
 import { cesiumIonToken, googleMapsKey } from './env'
 import { setView } from './camera'
 import { applyAtmosphere } from './atmosphere'
+import { addSkyLife, type SkyLifeHandle } from './skyLife'
 
 interface UseViewerResult {
   containerRef: React.RefObject<HTMLDivElement | null>
@@ -28,6 +29,7 @@ export function useViewer(intro: CameraView): UseViewerResult {
     let cancelled = false
     let viewer: Cesium.Viewer | null = null
     let pinchCleanup: (() => void) | null = null
+    let skyLife: SkyLifeHandle | null = null
 
     Cesium.Ion.defaultAccessToken = cesiumIonToken
     Cesium.GoogleMaps.defaultApiKey = googleMapsKey
@@ -122,6 +124,7 @@ export function useViewer(intro: CameraView): UseViewerResult {
         }
         v.scene.primitives.add(tileset)
         applyAtmosphere(v)
+        skyLife = addSkyLife(v)
         // Re-apply the intro now that real geometry exists, then reveal.
         setView(v, intro)
         setReady(true)
@@ -136,6 +139,7 @@ export function useViewer(intro: CameraView): UseViewerResult {
     return () => {
       cancelled = true
       pinchCleanup?.()
+      skyLife?.destroy()
       try {
         if (viewer && !viewer.isDestroyed()) viewer.destroy()
       } catch (e) {

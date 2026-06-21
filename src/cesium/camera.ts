@@ -119,14 +119,23 @@ export function zoomBy(viewer: Cesium.Viewer, factor: number): void {
   else cam.moveBackward(-amount)
 }
 
-/** Fly to a dramatic low, street-level oblique of a place. */
+/**
+ * Fly to a low, oblique "street-level" framing of a place. We keep a healthy
+ * standoff distance and a downward tilt so the camera stays comfortably above
+ * the buildings/terrain — a too-shallow pitch at low altitude can dive the
+ * camera underground on the photorealistic tiles.
+ */
 export function flyToStreetLevel(
   viewer: Cesium.Viewer,
   view: CameraView,
 ): Promise<boolean> {
   return flyToView(
     viewer,
-    { ...view, height: Math.max(140, view.height * 0.35), pitch: -8 },
+    {
+      ...view,
+      height: Math.max(320, view.height * 0.6),
+      pitch: Math.min(view.pitch, -28),
+    },
     1.8,
   )
 }

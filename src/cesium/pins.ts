@@ -38,6 +38,11 @@ export function addPins(
         outlineWidth: 3,
         disableDepthTestDistance: Number.POSITIVE_INFINITY,
         heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
+        // Far-away pins (other side of the bay) shrink and fade out instead of
+        // floating as big dots over un-streamed terrain.
+        scaleByDistance: new Cesium.NearFarScalar(2000, 1.0, 90000, 0.45),
+        translucencyByDistance: new Cesium.NearFarScalar(60000, 1.0, 120000, 0.0),
+        distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 120000),
       },
       label: {
         text: place.name,

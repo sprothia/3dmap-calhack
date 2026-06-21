@@ -8,7 +8,14 @@ export default function HeroMapField() {
     const svg = svgRef.current
     const hero = svg?.closest('.landing-hero') as HTMLElement | null
     if (!svg || !hero) return
-    return initHeroMapField(svg, hero)
+    // The hero animation touches SVG geometry APIs that can throw on remount
+    // (e.g. returning Home from the map). Never let that crash the whole app —
+    // the landing simply renders without the decorative field.
+    try {
+      return initHeroMapField(svg, hero)
+    } catch (e) {
+      console.warn('Hero map field failed to init (ignored):', e)
+    }
   }, [])
 
   return (

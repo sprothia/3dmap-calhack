@@ -24,7 +24,6 @@ const LOADING_DOTS = Array.from({ length: 22 }, (_, i) => ({
 
 function MapCanvas({ city, children }: MapViewProps) {
   const viewer = useViewer(city.intro)
-  const back = useAppStore((s) => s.back)
   const goHome = useAppStore((s) => s.reset)
 
   return (
@@ -38,12 +37,6 @@ function MapCanvas({ city, children }: MapViewProps) {
           className="pointer-events-auto flex items-center gap-1.5 rounded-full bg-cream px-4 py-2.5 text-sm font-semibold text-ink shadow-lg ring-1 ring-black/5 transition hover:-translate-x-0.5 hover:bg-parchment"
         >
           ← Home
-        </button>
-        <button
-          onClick={back}
-          className="pointer-events-auto rounded-full bg-cream/90 px-4 py-2.5 text-sm font-medium text-cocoa shadow-lg ring-1 ring-black/5 backdrop-blur transition hover:bg-cream"
-        >
-          Switch mode
         </button>
       </div>
 

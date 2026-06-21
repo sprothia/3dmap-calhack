@@ -782,6 +782,275 @@ const places: Place[] = [
     ],
     view: defaultView(37.3297, -121.9028, 0),
   },
+
+  // --- South San Francisco & the coastal Peninsula ---
+  {
+    id: 'sign-hill',
+    name: 'Sign Hill',
+    category: 'nature',
+    lat: 37.6597,
+    lng: -122.4097,
+    blurb:
+      'The hillside that spells "SOUTH SAN FRANCISCO THE INDUSTRIAL CITY" in 60-ft white letters — a 1920s civic billboard turned hiking park above the biotech valley.',
+    facts: ['Giant hillside letters', 'Hiking trails', 'Views of SFO + the bay'],
+    tags: [
+      { emoji: '🥾', label: 'Hiking' },
+      { emoji: '🏭', label: 'Industrial heritage' },
+      { emoji: '📸', label: 'Photography' },
+    ],
+    view: defaultView(37.6597, -122.4097, 200),
+  },
+  {
+    id: 'oyster-point',
+    name: 'Oyster Point Marina',
+    category: 'nature',
+    lat: 37.6655,
+    lng: -122.378,
+    blurb:
+      'A breezy bayfront marina and shoreline trail ringed by the gleaming labs of "Biotech Beach" — kite-surfers, ferries, and front-row SFO plane-spotting.',
+    facts: ['Bayfront trail', 'Genentech district', 'SFO flight path'],
+    tags: [
+      { emoji: '🌊', label: 'Waterfront' },
+      { emoji: '🪁', label: 'Kite-surfing' },
+      { emoji: '✈️', label: 'Plane-spotting' },
+    ],
+    view: defaultView(37.6655, -122.378, 280),
+  },
+  {
+    id: 'coyote-point',
+    name: 'Coyote Point',
+    category: 'nature',
+    lat: 37.591,
+    lng: -122.319,
+    blurb:
+      'A wooded bayside park on the Peninsula shore — eucalyptus groves, a swimming beach, windsurf launch, and the CuriOdyssey science museum.',
+    facts: ['Bayside park', 'Windsurfing hub', 'CuriOdyssey museum'],
+    tags: [
+      { emoji: '🌲', label: 'Nature' },
+      { emoji: '🏖', label: 'Beach' },
+      { emoji: '🌬', label: 'Windsurfing' },
+    ],
+    view: defaultView(37.591, -122.319, 200),
+  },
+  {
+    id: 'pacifica-pier',
+    name: 'Pacifica Pier',
+    category: 'nature',
+    lat: 37.6275,
+    lng: -122.4877,
+    blurb:
+      'Just over the hills from the city: a fishing pier reaching into the open Pacific, framed by surf breaks and the sea-cliff sweep of Mori Point.',
+    facts: ['Ocean fishing pier', 'Surf town', 'Mori Point trails'],
+    tags: [
+      { emoji: '🌊', label: 'Coastal' },
+      { emoji: '🏄', label: 'Surfing' },
+      { emoji: '🎣', label: 'Fishing' },
+    ],
+    view: defaultView(37.6275, -122.4877, 90),
+  },
+
+  // --- East Bay (across the water) ---
+  {
+    id: 'lake-merritt',
+    name: 'Lake Merritt',
+    category: 'nature',
+    lat: 37.8044,
+    lng: -122.258,
+    blurb:
+      'Oakland\'s glittering tidal lagoon — a 3.4-mile shoreline loop strung with the "Necklace of Lights," joggers, gondolas, and the country\'s oldest wildlife refuge.',
+    facts: ['Tidal lagoon', '3.4-mi loop', 'Necklace of Lights'],
+    tags: [
+      { emoji: '🌲', label: 'Nature' },
+      { emoji: '🚶', label: 'Walkable' },
+      { emoji: '🦆', label: 'Bird refuge' },
+    ],
+    view: defaultView(37.8044, -122.258, 200),
+  },
+  {
+    id: 'jack-london-square',
+    name: 'Jack London Square',
+    category: 'food',
+    lat: 37.7949,
+    lng: -122.2776,
+    blurb:
+      'Oakland\'s revived waterfront — a Sunday farmers market, dockside restaurants, the 1883 Heinold\'s First and Last Chance saloon, and ferries back to the city.',
+    facts: ['Oakland waterfront', 'Historic saloon', 'Ferry to SF'],
+    tags: [
+      { emoji: '🌊', label: 'Waterfront' },
+      { emoji: '🍜', label: 'Food' },
+      { emoji: '🏛', label: 'Historic' },
+    ],
+    view: defaultView(37.7949, -122.2776, 250),
+  },
+  {
+    id: 'fox-theater-oakland',
+    name: 'Fox Theater Oakland',
+    category: 'culture',
+    lat: 37.8082,
+    lng: -122.2685,
+    blurb:
+      'A dazzling 1928 movie palace reborn as Oakland\'s premier concert hall — gilded Indo-Persian fantasy facade anchoring the Uptown arts district.',
+    facts: ['Built 1928', 'Live music venue', 'Uptown landmark'],
+    tags: [
+      { emoji: '🎭', label: 'Entertainment' },
+      { emoji: '🏛', label: 'Historic' },
+      { emoji: '🎨', label: 'Culture' },
+    ],
+    view: defaultView(37.8082, -122.2685, 180),
+  },
+  {
+    id: 'oakland-museum',
+    name: 'Oakland Museum of California',
+    category: 'culture',
+    lat: 37.7975,
+    lng: -122.264,
+    blurb:
+      'Three museums in one — California art, history, and natural science — wrapped around terraced rooftop gardens beside Lake Merritt.',
+    facts: ['Art + history + science', 'Rooftop gardens', 'Founded 1969'],
+    tags: [
+      { emoji: '🎨', label: 'Culture' },
+      { emoji: '🌿', label: 'Gardens' },
+    ],
+    view: defaultView(37.7975, -122.264, 200),
+  },
+  {
+    id: 'uptown-oakland',
+    name: 'Uptown Oakland',
+    category: 'nightlife',
+    lat: 37.809,
+    lng: -122.2676,
+    blurb:
+      'The East Bay\'s nightlife engine — First Friday art walks, the Fox and Paramount theaters, rooftop bars, and some of the Bay\'s best live music and clubs.',
+    facts: ['First Fridays', 'Live music + bars', 'Art-deco theaters'],
+    tags: [
+      { emoji: '🌃', label: 'Nightlife' },
+      { emoji: '🎭', label: 'Entertainment' },
+    ],
+    view: defaultView(37.809, -122.2676, 180),
+  },
+  {
+    id: 'temescal',
+    name: 'Temescal',
+    category: 'food',
+    lat: 37.835,
+    lng: -122.263,
+    blurb:
+      'A North Oakland food destination — Korean BBQ, taco trucks, the famed Temescal Alley shops, and some of the East Bay\'s most loved restaurants.',
+    facts: ['Foodie corridor', 'Temescal Alley', 'North Oakland'],
+    tags: [
+      { emoji: '🍴', label: 'Food' },
+      { emoji: '🛍️', label: 'Shopping' },
+    ],
+    view: defaultView(37.835, -122.263, 90),
+  },
+  {
+    id: 'uc-berkeley',
+    name: 'UC Berkeley',
+    category: 'culture',
+    lat: 37.8721,
+    lng: -122.2578,
+    blurb:
+      'The flagship of the UC system — the Campanile bell tower, Sproul Plaza\'s free-speech history, redwood groves, and a campus humming with Nobel laureates.',
+    facts: ['Founded 1868', 'Sather Tower (Campanile)', 'Free Speech Movement'],
+    tags: [
+      { emoji: '🎓', label: 'University' },
+      { emoji: '🏛', label: 'Historic' },
+      { emoji: '🌲', label: 'Campus' },
+    ],
+    view: { lat: 37.8721, lng: -122.2578, height: 700, heading: 250, pitch: -30 },
+  },
+  {
+    id: 'telegraph-ave',
+    name: 'Telegraph Avenue',
+    category: 'shopping',
+    lat: 37.8676,
+    lng: -122.2588,
+    blurb:
+      'Berkeley\'s counter-culture main street running off campus — street vendors, Moe\'s and other legendary bookstores, record shops, and cheap global eats.',
+    facts: ['Bookstores + records', 'Street vendors', 'College-town energy'],
+    tags: [
+      { emoji: '🛍️', label: 'Shopping' },
+      { emoji: '📚', label: 'Bookstores' },
+    ],
+    view: defaultView(37.8676, -122.2588, 0),
+  },
+  {
+    id: 'gourmet-ghetto',
+    name: 'Gourmet Ghetto',
+    category: 'food',
+    lat: 37.8797,
+    lng: -122.2693,
+    blurb:
+      'The North Berkeley birthplace of California cuisine — Alice Waters\' Chez Panisse, Cheese Board Collective pizza lines, and a cluster of pioneering food spots.',
+    facts: ['Birthplace of Cal cuisine', 'Chez Panisse', 'Cheese Board pizza'],
+    tags: [
+      { emoji: '🍴', label: 'Food' },
+      { emoji: '🧀', label: 'Iconic eats' },
+    ],
+    view: defaultView(37.8797, -122.2693, 0),
+  },
+  {
+    id: 'berkeley-marina',
+    name: 'Berkeley Marina',
+    category: 'nature',
+    lat: 37.865,
+    lng: -122.314,
+    blurb:
+      'A windy spit reaching into the bay with the Bay Area\'s best skyline panorama — Cesar Chavez Park kite-flying, the pier, and sunsets behind the Golden Gate.',
+    facts: ['Best skyline view', 'Kite-flying park', 'Bayfront trails'],
+    tags: [
+      { emoji: '🌊', label: 'Waterfront' },
+      { emoji: '🪁', label: 'Kite-flying' },
+      { emoji: '📸', label: 'Photography' },
+    ],
+    view: defaultView(37.865, -122.314, 250),
+  },
+  {
+    id: 'tilden-park',
+    name: 'Tilden Regional Park',
+    category: 'nature',
+    lat: 37.8975,
+    lng: -122.245,
+    blurb:
+      'The East Bay\'s "jewel" — 2,000 wooded acres in the Berkeley Hills with a steam train, botanic garden, Lake Anza swimming, and ridge-top bay views.',
+    facts: ['2,000 acres', 'Steam train + carousel', 'Lake Anza'],
+    tags: [
+      { emoji: '🌲', label: 'Nature' },
+      { emoji: '🥾', label: 'Hiking' },
+      { emoji: '🚂', label: 'Family' },
+    ],
+    view: defaultView(37.8975, -122.245, 270),
+  },
+  {
+    id: 'emeryville-bay-street',
+    name: 'Bay Street, Emeryville',
+    category: 'shopping',
+    lat: 37.84,
+    lng: -122.293,
+    blurb:
+      'A compact retail city wedged between Oakland and Berkeley — open-air shopping, a multiplex, and the Pixar-adjacent bayfront with skyline views.',
+    facts: ['Open-air shopping', 'Bayfront dining', 'Pixar nearby'],
+    tags: [
+      { emoji: '🛍️', label: 'Shopping' },
+      { emoji: '🎬', label: 'Entertainment' },
+    ],
+    view: defaultView(37.84, -122.293, 220),
+  },
+  {
+    id: 'alameda-beach',
+    name: 'Crown Beach, Alameda',
+    category: 'nature',
+    lat: 37.756,
+    lng: -122.281,
+    blurb:
+      'A calm 2.5-mile bay beach on the island of Alameda — warm shallow water, skyline views, and the Victorian-lined streets of a frozen-in-time Navy town.',
+    facts: ['2.5-mi bay beach', 'Island town', 'Skyline views'],
+    tags: [
+      { emoji: '🏖', label: 'Beach' },
+      { emoji: '🌊', label: 'Waterfront' },
+    ],
+    view: defaultView(37.756, -122.281, 300),
+  },
 ]
 
 export const bayArea: City = {
@@ -1191,6 +1460,76 @@ export const bayArea: City = {
       color: '#2F2A24',
       facts: ['Apple Park', '“The spaceship”', 'Top schools'],
       view: { lat: 37.323, lng: -122.0322, height: 2400, heading: 0, pitch: -35 },
+    },
+
+    // ── East Bay ──
+    {
+      id: 'downtown-oakland',
+      name: 'Oakland',
+      lat: 37.8044,
+      lng: -122.2712,
+      blurb:
+        'The Bay’s soulful second city — Lake Merritt, a booming arts and food scene, Uptown nightlife, and the deepest cultural roots in the East Bay.',
+      color: '#2F2A24',
+      facts: ['Lake Merritt', 'Uptown arts + nightlife', 'Jack London waterfront'],
+      view: { lat: 37.8044, lng: -122.2712, height: 2400, heading: 300, pitch: -35 },
+    },
+    {
+      id: 'berkeley-area',
+      name: 'Berkeley',
+      lat: 37.8715,
+      lng: -122.273,
+      blurb:
+        'Home of UC Berkeley — the Campanile, Telegraph Avenue, the birthplace of California cuisine, and a hillside of redwood parks above the bay.',
+      color: '#2F2A24',
+      facts: ['UC Berkeley', 'Gourmet Ghetto', 'Telegraph Ave'],
+      view: { lat: 37.8715, lng: -122.273, height: 2400, heading: 250, pitch: -35 },
+    },
+    {
+      id: 'emeryville-area',
+      name: 'Emeryville',
+      lat: 37.8313,
+      lng: -122.2852,
+      blurb:
+        'A tiny bayfront city between Oakland and Berkeley — Pixar’s home, open-air shopping, and gleaming towers right on the water.',
+      color: '#2F2A24',
+      facts: ['Pixar HQ', 'Bay Street shops', 'Bayfront'],
+      view: { lat: 37.8313, lng: -122.2852, height: 2000, heading: 240, pitch: -35 },
+    },
+    {
+      id: 'alameda-area',
+      name: 'Alameda',
+      lat: 37.7652,
+      lng: -122.2416,
+      blurb:
+        'An island town of Victorian streets, a calm bay beach, a decommissioned Navy base turned distillery row, and unbeatable skyline views.',
+      color: '#2F2A24',
+      facts: ['Island town', 'Crown Beach', 'Distillery row'],
+      view: { lat: 37.7652, lng: -122.2416, height: 2200, heading: 300, pitch: -35 },
+    },
+    {
+      id: 'richmond-area',
+      name: 'Richmond',
+      lat: 37.9358,
+      lng: -122.3477,
+      blurb:
+        'The northern East Bay shoreline — Rosie the Riveter history, the Bay Trail, and the bridge across to Marin.',
+      color: '#2F2A24',
+      facts: ['Rosie the Riveter NHP', 'Bay Trail', 'Bridge to Marin'],
+      view: { lat: 37.9358, lng: -122.3477, height: 2600, heading: 270, pitch: -35 },
+    },
+
+    // ── North Bay ──
+    {
+      id: 'sausalito-area',
+      name: 'Sausalito',
+      lat: 37.8591,
+      lng: -122.4853,
+      blurb:
+        'A Mediterranean-feeling harbor town just across the Golden Gate — houseboats, art galleries, and the classic look back at the city skyline.',
+      color: '#2F2A24',
+      facts: ['Houseboats', 'Art galleries', 'Ferry from SF'],
+      view: { lat: 37.8591, lng: -122.4853, height: 2200, heading: 160, pitch: -35 },
     },
   ],
 }
