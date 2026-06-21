@@ -7,11 +7,17 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "node --env-file=.env server/index.js"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.69.0",
+    "@browserbasehq/sdk": "^2.6.1",
     "@types/three": "^0.184.1",
     "cesium": "^1.142.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "playwright-core": "^1.49.1",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "three": "^0.184.0",

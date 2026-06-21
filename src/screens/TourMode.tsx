@@ -10,6 +10,7 @@ import { prefetchSpeech } from '../narration/deepgramTTS'
 import { hasDeepgramKey } from '../cesium/env'
 import { CATEGORY_CHIP, CATEGORY_LABEL } from '../data/categories'
 import AreaInfoSidebar from '../components/AreaInfoSidebar'
+import NeighborhoodAsk from '../components/NeighborhoodAsk'
 import ImageGallery from '../components/ImageGallery'
 
 interface TourModeProps {
@@ -214,7 +215,11 @@ export default function TourMode({ city, viewer }: TourModeProps) {
 
   useEffect(() => {
     let wheelLock = false
+    const isTypingTarget = (target: EventTarget | null) =>
+      target instanceof HTMLElement &&
+      (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)
     const onWheel = (e: WheelEvent) => {
+      if (isTypingTarget(e.target)) return
       if (wheelLock || phase !== 'riding' || rideRef.current?.isTraveling()) return
       if (Math.abs(e.deltaY) < 20) return
       wheelLock = true
@@ -223,6 +228,7 @@ export default function TourMode({ city, viewer }: TourModeProps) {
       window.setTimeout(() => (wheelLock = false), 600)
     }
     const onKey = (e: KeyboardEvent) => {
+      if (isTypingTarget(e.target)) return
       if (e.key === 'Escape') selectMode('explore')
       if (phase !== 'riding') return
       if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') advance()
@@ -603,6 +609,11 @@ export default function TourMode({ city, viewer }: TourModeProps) {
           {/* Area info sidebar — shown when parked */}
           {!traveling && stop.areaInfo && (
             <AreaInfoSidebar area={stop.areaInfo} />
+          )}
+
+          {/* Ask-about-this-neighborhood panel — shown when parked */}
+          {!traveling && stop.areaInfo && (
+            <NeighborhoodAsk key={stop.areaInfo.name} neighborhoodName={stop.areaInfo.name} />
           )}
 
           {/* Pop the card back up after Look around / Street view */}
