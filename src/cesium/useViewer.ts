@@ -4,6 +4,7 @@ import type { CameraView } from '../data/types'
 import { cesiumIonToken, googleMapsKey } from './env'
 import { setView } from './camera'
 import { applyAtmosphere } from './atmosphere'
+import { addSkyLife, type SkyLifeHandle } from './skyLife'
 
 interface UseViewerResult {
   containerRef: React.RefObject<HTMLDivElement | null>
@@ -27,6 +28,8 @@ export function useViewer(intro: CameraView): UseViewerResult {
     if (!containerRef.current) return
     let cancelled = false
     let viewer: Cesium.Viewer | null = null
+    let pinchCleanup: (() => void) | null = null
+    let skyLife: SkyLifeHandle | null = null
 
     Cesium.Ion.defaultAccessToken = cesiumIonToken
     Cesium.GoogleMaps.defaultApiKey = googleMapsKey
@@ -86,6 +89,21 @@ export function useViewer(intro: CameraView): UseViewerResult {
         },
       ]
 
+      // macOS trackpad pinch arrives as a wheel event with ctrlKey=true, which
+      // Cesium's WHEEL/PINCH handlers don't catch. Map it to a smooth zoom.
+      const canvas = v.scene.canvas
+      const onPinchWheel = (e: WheelEvent) => {
+        if (!e.ctrlKey) return // only trackpad-pinch / ctrl+wheel
+        e.preventDefault()
+        const height = v.camera.positionCartographic.height
+        // deltaY < 0 = pinch out (zoom in). Scale move by current height.
+        const amount = height * Math.min(Math.abs(e.deltaY) * 0.01, 0.5)
+        if (e.deltaY < 0) v.camera.moveForward(amount)
+        else v.camera.moveBackward(amount)
+      }
+      canvas.addEventListener('wheel', onPinchWheel, { passive: false })
+      pinchCleanup = () => canvas.removeEventListener('wheel', onPinchWheel)
+
       if (cancelled) {
         v.destroy()
         return
@@ -106,6 +124,7 @@ export function useViewer(intro: CameraView): UseViewerResult {
         }
         v.scene.primitives.add(tileset)
         applyAtmosphere(v)
+        skyLife = addSkyLife(v)
         // Re-apply the intro now that real geometry exists, then reveal.
         setView(v, intro)
         setReady(true)
@@ -119,7 +138,15 @@ export function useViewer(intro: CameraView): UseViewerResult {
 
     return () => {
       cancelled = true
-      if (viewer && !viewer.isDestroyed()) viewer.destroy()
+      pinchCleanup?.()
+      skyLife?.destroy()
+      try {
+        if (viewer && !viewer.isDestroyed()) viewer.destroy()
+      } catch (e) {
+        // Cesium can throw during teardown (esp. under StrictMode double-mount);
+        // never let it crash the app / blank the screen.
+        console.warn('Viewer teardown error (ignored):', e)
+      }
       viewerRef.current = null
     }
     // Create the viewer once; intro is stable per city.

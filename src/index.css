@@ -136,7 +136,64 @@ body {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
+
+/* ── Map atmosphere: drifting clouds + gliding birds ── */
+@keyframes mapCloud {
+  from { transform: translateX(0); }
+  to   { transform: translateX(140vw); }
+}
+@keyframes mapBird {
+  0%   { transform: translate(0, 0); }
+  50%  { transform: translate(55vw, -3vh); }
+  100% { transform: translate(112vw, 1vh); }
+}
+.bird-flap {
+  animation: birdFlap 0.5s ease-in-out infinite;
+  line-height: 1;
+}
+@keyframes birdFlap {
+  0%, 100% { transform: scaleY(1); }
+  50%      { transform: scaleY(0.55); }
+}
+/* Whole-flock vertical bob layered over the cross-screen glide */
+@keyframes birdBob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+/* Hot-air balloon drifting slowly across the upper sky */
+@keyframes mapBalloon {
+  from { transform: translateX(0); }
+  to   { transform: translateX(125vw); }
+}
+/* Tour intro banner: flowing flight arc, drifting clouds, bobbing plane */
+@keyframes dashFlow {
+  to { stroke-dashoffset: -11; }
+}
+@keyframes tourCloud {
+  from { transform: translateX(-30px); }
+  to   { transform: translateX(30px); }
+}
+@keyframes tourPlane {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(6px, -4px); }
+}
 @keyframes loaderSlide {
   0%   { transform: translateX(-100%); }
   100% { transform: translateX(400%); }
+}
+
+/* ── Screen transitions ── */
+@keyframes screenIn {
+  from { opacity: 0; transform: scale(0.985); }
+  to   { opacity: 1; transform: scale(1); }
+}
+/* Curtain sweeps down then lifts away */
+@keyframes curtainSweep {
+  0%   { transform: translateY(-100%); }
+  45%  { transform: translateY(0); }
+  55%  { transform: translateY(0); }
+  100% { transform: translateY(100%); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }

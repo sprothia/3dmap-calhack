@@ -150,6 +150,23 @@ export interface Tour {
 
 export type CityStatus = 'ready' | 'coming-soon'
 
+/** A neighborhood / district shown as a clickable labeled zone on the map. */
+export interface District {
+  id: string
+  name: string
+  /** Center of the district (label + fly target). */
+  lat: number
+  lng: number
+  /** A short description of the area's character. */
+  blurb: string
+  /** Accent color (hex) for the label + zone. */
+  color: string
+  /** Camera framing when you fly to the district. */
+  view: CameraView
+  /** A few quick facts about the area. */
+  facts?: string[]
+}
+
 export interface City {
   id: string
   name: string
@@ -160,4 +177,6 @@ export interface City {
   intro: CameraView
   places: Place[]
   tours: Tour[]
+  /** Neighborhoods/districts shown on the explore map. */
+  districts?: District[]
 }
