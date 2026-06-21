@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  @apply text-ink font-body;
+  -webkit-font-smoothing: antialiased;
+  background:
+    radial-gradient(
+      1200px 600px at 50% -10%,
+      rgba(217, 164, 65, 0.12),
+      rgba(251, 243, 228, 0) 60%
+    ),
+    #fbf3e4;
+}
+
+/* Trim Cesium's on-canvas credit clutter (attribution stays in the lightbox). */
+.cesium-credit-hidden .cesium-widget-credits {
+  display: none !important;
+}
+
+/* Signature fog flourish drifting along the bottom of the map. */
+.fog-band {
+  position: absolute;
+  bottom: -20px;
+  left: -50%;
+  width: 200%;
+  height: 120px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(251, 243, 228, 0.55) 0%,
+    rgba(251, 243, 228, 0) 70%
+  );
+  filter: blur(8px);
+}
+.fog-band-1 {
+  animation: fog-drift 38s linear infinite;
+  opacity: 0.8;
+}
+.fog-band-2 {
+  animation: fog-drift 56s linear infinite reverse;
+  opacity: 0.5;
+  bottom: 10px;
+}
+@keyframes fog-drift {
+  from {
+    transform: translateX(-12%);
+  }
+  to {
+    transform: translateX(12%);
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -6px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
