@@ -8,6 +8,8 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
+app.get('/', (_req, res) => res.json({ ok: true, service: '3dtour-backend'}))
+
 app.post('/ask/:neighborhoodId', async (req, res) => {
   const neighborhoodName = decodeURIComponent(req.params.neighborhoodId)
   const question = req.body?.question
