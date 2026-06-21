@@ -155,6 +155,28 @@ body {
   0%, 100% { transform: scaleY(1); }
   50%      { transform: scaleY(0.55); }
 }
+/* Whole-flock vertical bob layered over the cross-screen glide */
+@keyframes birdBob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+/* Hot-air balloon drifting slowly across the upper sky */
+@keyframes mapBalloon {
+  from { transform: translateX(0); }
+  to   { transform: translateX(125vw); }
+}
+/* Tour intro banner: flowing flight arc, drifting clouds, bobbing plane */
+@keyframes dashFlow {
+  to { stroke-dashoffset: -11; }
+}
+@keyframes tourCloud {
+  from { transform: translateX(-30px); }
+  to   { transform: translateX(30px); }
+}
+@keyframes tourPlane {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(6px, -4px); }
+}
 @keyframes loaderSlide {
   0%   { transform: translateX(-100%); }
   100% { transform: translateX(400%); }

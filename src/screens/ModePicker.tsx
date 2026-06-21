@@ -96,13 +96,6 @@ export default function ModePicker() {
                 />
                 {/* Subtle dark gradient for text legibility */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                {/* Floating emoji badge */}
-                <span
-                  className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-white/85 text-3xl shadow-lg backdrop-blur transition-transform duration-500 group-hover:scale-110"
-                  style={{ animation: 'floatSlow 4s ease-in-out infinite' }}
-                >
-                  {m.emoji}
-                </span>
                 <span className="absolute bottom-3 left-4 rounded-full bg-black/45 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white backdrop-blur">
                   {m.tagline}
                 </span>

@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import type { Place, SubPOI } from '../data/types'
 import { CATEGORY_COLOR, CATEGORY_LABEL } from '../data/categories'
+import { placeGallery } from '../data/placeImages'
 import ImageGallery from './ImageGallery'
 
 interface PlacePanelProps {
@@ -23,7 +24,8 @@ export default function PlacePanel({
   const [tab, setTab] = useState<Tab>('overview')
   const accent = CATEGORY_COLOR[place.category]
 
-  const allImages = [...(place.image ? [place.image] : []), ...(place.images ?? [])]
+  // Every place shows at least two photos (real first, scenic fillers after).
+  const allImages = placeGallery(place, 2)
 
   const hasDetails = !!(place.history || (place.stats && place.stats.length > 0))
   const hasLocal = !!(

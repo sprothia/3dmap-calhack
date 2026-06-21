@@ -17,6 +17,36 @@ interface LatLng {
   lng: number
 }
 
+export interface GeoPoint {
+  lat: number
+  lng: number
+  /** Human-readable resolved address. */
+  label: string
+}
+
+// Bias geocoding toward the greater Bay Area so "Main St" resolves locally.
+const BAY_AREA_BOUNDS = '36.9,-123.2|38.5,-121.2'
+
+/**
+ * Resolve a free-text address/place to coordinates via the Google Geocoding
+ * API. Returns null if nothing is found or the API isn't enabled on the key.
+ */
+export async function geocodeAddress(query: string): Promise<GeoPoint | null> {
+  const url =
+    `https://maps.googleapis.com/maps/api/geocode/json` +
+    `?address=${encodeURIComponent(query)}` +
+    `&bounds=${encodeURIComponent(BAY_AREA_BOUNDS)}` +
+    `&region=us&key=${googleMapsKey}`
+  const res = await fetch(url)
+  if (!res.ok) return null
+  const data = await res.json()
+  if (data.status !== 'OK' || !data.results?.length) return null
+  const top = data.results[0]
+  const loc = top.geometry?.location
+  if (!loc) return null
+  return { lat: loc.lat, lng: loc.lng, label: top.formatted_address ?? query }
+}
+
 /**
  * Calls the Google Routes API (computeRoutes) for a single origin→destination
  * in a given travel mode. Returns real duration, distance, and the route path.
