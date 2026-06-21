@@ -634,7 +634,7 @@ const places: Place[] = [
     image:
       'https://commons.wikimedia.org/wiki/Special:FilePath/4th_and_King_Station.jpg?width=640',
     images: [
-      'https://commons.wikimedia.org/wiki/Special:FilePath/ACE_Bombardier_BiLevel_IX_cab_car_at_ACE_Bombardier_BiLevel_IX_cab_car_at_San_Jose_Diridon.jpg?width=640',
+      'https://commons.wikimedia.org/wiki/Special:FilePath/San_Francisco_4th_and_King_Street_Station.jpg?width=640',
     ],
     view: defaultView(37.7765, -122.3947, 180),
   },
@@ -976,6 +976,221 @@ export const bayArea: City = {
             'The rocks below have wrecked dozens of ships -- at very low tide you can still spot rusting hulls.',
         },
       ],
+    },
+  ],
+  // All districts share one cohesive ink color (set in the renderer) for a
+  // clean, seamless look — no per-district funky colors.
+  districts: [
+    {
+      id: 'downtown-fidi',
+      name: 'Financial District',
+      lat: 37.7935,
+      lng: -122.3995,
+      blurb:
+        'The city’s business core — skyscrapers, the Transamerica Pyramid, and Salesforce Tower piercing the skyline.',
+      color: '#2F2A24',
+      facts: ['Tallest skyline', 'Transamerica Pyramid', 'Salesforce Tower'],
+      view: { lat: 37.7935, lng: -122.3995, height: 1400, heading: 30, pitch: -35 },
+    },
+    {
+      id: 'north-beach-area',
+      name: 'North Beach',
+      lat: 37.8003,
+      lng: -122.4103,
+      blurb:
+        'SF’s Little Italy — espresso bars, Beat-era bookstores, and lively nightlife under Coit Tower.',
+      color: '#2F2A24',
+      facts: ['Little Italy', 'Beat Generation', 'Nightlife'],
+      view: { lat: 37.8003, lng: -122.4103, height: 1200, heading: 0, pitch: -35 },
+    },
+    {
+      id: 'chinatown-area',
+      name: 'Chinatown',
+      lat: 37.7941,
+      lng: -122.4078,
+      blurb:
+        'The oldest Chinatown in North America — the Dragon Gate, dim sum, herbal shops, and lantern-strung alleys.',
+      color: '#2F2A24',
+      facts: ['Oldest in N. America', 'Dim sum', 'Dragon Gate'],
+      view: { lat: 37.7941, lng: -122.4078, height: 1100, heading: 0, pitch: -35 },
+    },
+    {
+      id: 'fishermans-wharf',
+      name: 'Fisherman’s Wharf',
+      lat: 37.808,
+      lng: -122.4177,
+      blurb:
+        'The classic tourist waterfront — sea lions, clam chowder, Pier 39, and boats to Alcatraz.',
+      color: '#2F2A24',
+      facts: ['Sea lions', 'Seafood', 'Alcatraz ferries'],
+      view: { lat: 37.808, lng: -122.4177, height: 1300, heading: 180, pitch: -35 },
+    },
+    {
+      id: 'the-mission',
+      name: 'The Mission',
+      lat: 37.7599,
+      lng: -122.4148,
+      blurb:
+        'The vibrant, muraled heart of Latino SF — taquerías, dive bars, Dolores Park, and the city’s best sun.',
+      color: '#2F2A24',
+      facts: ['Murals + taquerías', 'Sunniest spot', 'Nightlife'],
+      view: { lat: 37.7599, lng: -122.4148, height: 1500, heading: 20, pitch: -35 },
+    },
+    {
+      id: 'castro-area',
+      name: 'The Castro',
+      lat: 37.7609,
+      lng: -122.435,
+      blurb:
+        'The historic heart of LGBTQ+ San Francisco — rainbow crosswalks, the Castro Theatre, and a buzzing scene.',
+      color: '#2F2A24',
+      facts: ['LGBTQ+ heart', 'Castro Theatre', 'Nightlife'],
+      view: { lat: 37.7609, lng: -122.435, height: 1200, heading: 0, pitch: -35 },
+    },
+    {
+      id: 'haight-ashbury',
+      name: 'Haight-Ashbury',
+      lat: 37.77,
+      lng: -122.4469,
+      blurb:
+        'The birthplace of 1960s counterculture — Victorian homes, vintage shops, and the gateway to Golden Gate Park.',
+      color: '#2F2A24',
+      facts: ['Summer of Love', 'Vintage shops', 'Victorians'],
+      view: { lat: 37.77, lng: -122.4469, height: 1300, heading: 90, pitch: -35 },
+    },
+    {
+      id: 'hayes-valley',
+      name: 'Hayes Valley',
+      lat: 37.7765,
+      lng: -122.4244,
+      blurb:
+        'A chic, walkable enclave of boutiques, design shops, and buzzy restaurants around a central green.',
+      color: '#2F2A24',
+      facts: ['Boutiques', 'Foodie scene', 'Patricia’s Green'],
+      view: { lat: 37.7765, lng: -122.4244, height: 1100, heading: 0, pitch: -35 },
+    },
+    {
+      id: 'soma',
+      name: 'SoMa',
+      lat: 37.7785,
+      lng: -122.4056,
+      blurb:
+        'South of Market — tech HQs, museums (SFMOMA), Oracle Park, and the city’s biggest nightclubs.',
+      color: '#2F2A24',
+      facts: ['Tech HQs', 'SFMOMA', 'Oracle Park'],
+      view: { lat: 37.7785, lng: -122.4056, height: 1500, heading: 30, pitch: -35 },
+    },
+    {
+      id: 'nob-hill',
+      name: 'Nob Hill',
+      lat: 37.7929,
+      lng: -122.4161,
+      blurb:
+        'Old-money elegance atop the hills — grand hotels, Grace Cathedral, and cable cars clanging up the slopes.',
+      color: '#2F2A24',
+      facts: ['Grand hotels', 'Grace Cathedral', 'Cable cars'],
+      view: { lat: 37.7929, lng: -122.4161, height: 1200, heading: 0, pitch: -35 },
+    },
+    {
+      id: 'pacific-heights',
+      name: 'Pacific Heights',
+      lat: 37.7925,
+      lng: -122.4382,
+      blurb:
+        'The city’s most prestigious address — mansions, bay views, and the boutiques of Fillmore Street.',
+      color: '#2F2A24',
+      facts: ['Mansions', 'Bay views', 'Fillmore St'],
+      view: { lat: 37.7925, lng: -122.4382, height: 1300, heading: 0, pitch: -35 },
+    },
+    {
+      id: 'sunset-richmond',
+      name: 'The Sunset',
+      lat: 37.7535,
+      lng: -122.4905,
+      blurb:
+        'Foggy, residential, and right by the ocean — a quiet grid of homes stretching to Ocean Beach.',
+      color: '#2F2A24',
+      facts: ['Ocean Beach', 'Foggy + quiet', 'Residential'],
+      view: { lat: 37.7535, lng: -122.4905, height: 1600, heading: 70, pitch: -35 },
+    },
+
+    // ── Peninsula & South Bay ──
+    {
+      id: 'south-sf',
+      name: 'South San Francisco',
+      lat: 37.6547,
+      lng: -122.4077,
+      blurb:
+        '“The Industrial City” turned biotech capital of the world — home to Genentech and hundreds of life-science labs.',
+      color: '#2F2A24',
+      facts: ['Biotech hub', 'Genentech', 'Near SFO'],
+      view: { lat: 37.6547, lng: -122.4077, height: 2200, heading: 20, pitch: -35 },
+    },
+    {
+      id: 'daly-city',
+      name: 'Daly City',
+      lat: 37.6879,
+      lng: -122.4702,
+      blurb:
+        'The foggy gateway just south of the city line — coastal bluffs, a huge Filipino community, and endless rows of homes.',
+      color: '#2F2A24',
+      facts: ['“Fog City”', 'Coastal bluffs', 'Filipino hub'],
+      view: { lat: 37.6879, lng: -122.4702, height: 2200, heading: 60, pitch: -35 },
+    },
+    {
+      id: 'san-mateo-area',
+      name: 'San Mateo',
+      lat: 37.5629,
+      lng: -122.3255,
+      blurb:
+        'The Peninsula’s lively midpoint — a walkable downtown, Central Park’s Japanese garden, and great mixed food.',
+      color: '#2F2A24',
+      facts: ['Walkable downtown', 'Japanese garden', 'Midpoint'],
+      view: { lat: 37.5629, lng: -122.3255, height: 2200, heading: 0, pitch: -35 },
+    },
+    {
+      id: 'palo-alto-area',
+      name: 'Palo Alto',
+      lat: 37.4419,
+      lng: -122.143,
+      blurb:
+        'Home of Stanford and the birthplace of Silicon Valley — leafy streets, University Ave, and endless startups.',
+      color: '#2F2A24',
+      facts: ['Stanford', 'Silicon Valley', 'University Ave'],
+      view: { lat: 37.4419, lng: -122.143, height: 2400, heading: 30, pitch: -35 },
+    },
+    {
+      id: 'mountain-view-area',
+      name: 'Mountain View',
+      lat: 37.3861,
+      lng: -122.0839,
+      blurb:
+        'Googleplex country — a global food street on Castro, the Computer History Museum, and bayfront tech campuses.',
+      color: '#2F2A24',
+      facts: ['Googleplex', 'Castro St food', 'Computer History Museum'],
+      view: { lat: 37.3861, lng: -122.0839, height: 2400, heading: 20, pitch: -35 },
+    },
+    {
+      id: 'san-jose-area',
+      name: 'San Jose',
+      lat: 37.3382,
+      lng: -121.8863,
+      blurb:
+        'The Bay’s biggest city and the capital of Silicon Valley — a sprawling, sunny downtown anchored by tech.',
+      color: '#2F2A24',
+      facts: ['Biggest Bay city', 'Silicon Valley capital', 'Sunny'],
+      view: { lat: 37.3382, lng: -121.8863, height: 2800, heading: 10, pitch: -35 },
+    },
+    {
+      id: 'cupertino-area',
+      name: 'Cupertino',
+      lat: 37.323,
+      lng: -122.0322,
+      blurb:
+        'Quiet suburb made famous by Apple Park — the gleaming “spaceship” ring HQ and top-rated schools.',
+      color: '#2F2A24',
+      facts: ['Apple Park', '“The spaceship”', 'Top schools'],
+      view: { lat: 37.323, lng: -122.0322, height: 2400, heading: 0, pitch: -35 },
     },
   ],
 }

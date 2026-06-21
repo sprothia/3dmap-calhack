@@ -19,13 +19,13 @@ export default function AreaInfoSidebar({ area }: AreaInfoSidebarProps) {
 
       <div className="space-y-3 px-4 py-3.5 text-[12px] text-ink">
         {area.population && (
-          <StatRow icon="👥" label="Population" value={area.population} />
+          <StatRow label="Population" value={area.population} />
         )}
-        {area.density && <StatRow icon="🏙️" label="Density" value={area.density} />}
+        {area.density && <StatRow label="Density" value={area.density} />}
         {area.medianIncome && (
-          <StatRow icon="💰" label="Median income" value={area.medianIncome} />
+          <StatRow label="Median income" value={area.medianIncome} />
         )}
-        {area.climate && <StatRow icon="🌤️" label="Climate" value={area.climate} />}
+        {area.climate && <StatRow label="Climate" value={area.climate} />}
 
         {area.industries && area.industries.length > 0 && (
           <div className="space-y-1">
@@ -74,16 +74,13 @@ export default function AreaInfoSidebar({ area }: AreaInfoSidebarProps) {
   )
 }
 
-function StatRow({ icon, label, value }: { icon: string; label: string; value: string }) {
+function StatRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-start gap-2">
-      <span className="mt-0.5 text-base leading-none">{icon}</span>
-      <div>
-        <p className="text-[10px] font-semibold uppercase tracking-wide text-cocoa">
-          {label}
-        </p>
-        <p className="font-semibold text-ink">{value}</p>
-      </div>
+    <div>
+      <p className="text-[10px] font-semibold uppercase tracking-wide text-cocoa">
+        {label}
+      </p>
+      <p className="font-semibold text-ink">{value}</p>
     </div>
   )
 }

@@ -2,6 +2,50 @@ import * as Cesium from 'cesium'
 import type { CameraView } from '../data/types'
 
 /**
+ * Rotate the camera around the point it's currently looking at, by `degrees`
+ * (positive = clockwise). Smoothly animated. Used by the on-screen rotate
+ * buttons so you can spin around whatever you're viewing.
+ */
+export function rotateAroundView(
+  viewer: Cesium.Viewer,
+  degrees: number,
+  durationMs = 600,
+): void {
+  const scene = viewer.scene
+  // Find the ground point at screen center to orbit around.
+  const center = new Cesium.Cartesian2(
+    scene.canvas.clientWidth / 2,
+    scene.canvas.clientHeight / 2,
+  )
+  const picked = scene.pickPosition(center)
+  const target =
+    picked ??
+    viewer.camera.pickEllipsoid(center, scene.globe?.ellipsoid ?? Cesium.Ellipsoid.WGS84)
+  if (!target) {
+    // Fallback: just spin the camera heading in place.
+    viewer.camera.rotateRight(Cesium.Math.toRadians(degrees))
+    return
+  }
+
+  const transform = Cesium.Transforms.eastNorthUpToFixedFrame(target)
+  const total = Cesium.Math.toRadians(degrees)
+  const t0 = performance.now()
+  let applied = 0
+  const step = (now: number) => {
+    if (viewer.isDestroyed()) return
+    const p = Math.min((now - t0) / durationMs, 1)
+    const targetAngle = total * p
+    const delta = targetAngle - applied
+    applied = targetAngle
+    viewer.camera.lookAtTransform(transform)
+    viewer.camera.rotateRight(delta)
+    viewer.camera.lookAtTransform(Cesium.Matrix4.IDENTITY)
+    if (p < 1) requestAnimationFrame(step)
+  }
+  requestAnimationFrame(step)
+}
+
+/**
  * Fly so the camera looks AT a place, keeping it centered in frame.
  * We aim at the place's ground point and orbit out by `view.height` meters
  * at the given heading/pitch — this frames the location itself rather than

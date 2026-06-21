@@ -1,11 +1,6 @@
 import { useState } from 'react'
 import type { Category, City, Place } from '../data/types'
-import {
-  ALL_CATEGORIES,
-  CATEGORY_COLOR,
-  CATEGORY_EMOJI,
-  CATEGORY_LABEL,
-} from '../data/categories'
+import { ALL_CATEGORIES, CATEGORY_COLOR, CATEGORY_LABEL } from '../data/categories'
 
 interface CategorySidebarProps {
   city: City
@@ -71,10 +66,10 @@ export default function CategorySidebar({
         />
         <button
           onClick={surprise}
-          title="Surprise me"
-          className="shrink-0 rounded-full bg-sunset px-2.5 py-1.5 text-sm text-cream transition hover:bg-[#d9632d] active:scale-95"
+          title="Surprise me — pick a random place"
+          className="shrink-0 rounded-full bg-sunset px-3.5 py-1.5 text-xs font-semibold text-cream transition hover:bg-[#d9632d] active:scale-95"
         >
-          🎲
+          Random
         </button>
       </div>
 
@@ -126,11 +121,9 @@ export default function CategorySidebar({
                 }`}
               >
                 <span
-                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-sm"
-                  style={{ backgroundColor: CATEGORY_COLOR[cat] + '26' }}
-                >
-                  {CATEGORY_EMOJI[cat]}
-                </span>
+                  className="h-3.5 w-3.5 shrink-0 rounded-full"
+                  style={{ backgroundColor: CATEGORY_COLOR[cat] }}
+                />
                 <span className="flex-1">
                   <span className="block text-sm font-medium text-ink">
                     {CATEGORY_LABEL[cat]}
