@@ -1,6 +1,8 @@
-import { useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import type { Place, SubPOI } from '../data/types'
 import { CATEGORY_CHIP, CATEGORY_EMOJI, CATEGORY_LABEL } from '../data/categories'
+import { useNarration } from '../state/useNarration'
+import { hasDeepgramKey } from '../cesium/env'
 import ImageGallery from './ImageGallery'
 
 interface PlacePanelProps {
@@ -21,6 +23,19 @@ export default function PlacePanel({
   onFlyToSubPOI,
 }: PlacePanelProps) {
   const [tab, setTab] = useState<Tab>('overview')
+
+  const speak = useNarration((s) => s.speak)
+  const stopNarration = useNarration((s) => s.stop)
+  const isPlaying = useNarration((s) => s.isPlaying)
+  const isLoading = useNarration((s) => s.isLoading)
+
+  // Read the place's overview + history aloud; stop when switching place / closing.
+  const narrationText = [place.blurb, place.history].filter(Boolean).join(' ')
+  useEffect(() => () => stopNarration(), [place.id, stopNarration])
+  const toggleListen = () => {
+    if (isPlaying || isLoading) stopNarration()
+    else void speak(narrationText)
+  }
 
   const allImages = [
     ...(place.image ? [place.image] : []),
@@ -61,6 +76,14 @@ export default function PlacePanel({
           >
             {CATEGORY_EMOJI[place.category]} {CATEGORY_LABEL[place.category]}
           </span>
+          {hasDeepgramKey && narrationText && (
+            <button
+              onClick={toggleListen}
+              className="inline-flex items-center gap-1 rounded-full border border-cocoa/15 bg-parchment/70 px-2.5 py-0.5 text-xs font-medium text-cocoa transition hover:bg-parchment active:scale-95"
+            >
+              {isLoading ? '⏳ Loading' : isPlaying ? '⏹ Stop' : '🔊 Listen'}
+            </button>
+          )}
         </div>
         <h2 className="mt-1.5 font-display text-xl font-semibold text-ink leading-tight">
           {place.name}
