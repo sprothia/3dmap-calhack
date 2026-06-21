@@ -5,7 +5,7 @@ import { addPins, type PinHandle } from '../cesium/pins'
 import { RideCamera } from '../cesium/rideCamera'
 import { orbitAround, flyToStreetLevel } from '../cesium/camera'
 import { useAppStore } from '../state/useAppStore'
-import { CATEGORY_CHIP, CATEGORY_EMOJI } from '../data/categories'
+import { CATEGORY_CHIP, CATEGORY_LABEL } from '../data/categories'
 import AreaInfoSidebar from '../components/AreaInfoSidebar'
 import ImageGallery from '../components/ImageGallery'
 
@@ -530,11 +530,11 @@ export default function TourMode({ city, viewer }: TourModeProps) {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       {place && (
-                        <span className={`inline-block rounded-full px-2 py-0.5 text-[11px] font-medium ${CATEGORY_CHIP[place.category]}`}>
-                          {CATEGORY_EMOJI[place.category]}
+                        <span className={`inline-block rounded-full px-2.5 py-0.5 text-[11px] font-medium ${CATEGORY_CHIP[place.category]}`}>
+                          {CATEGORY_LABEL[place.category]}
                         </span>
                       )}
-                      <span className="text-[11px] text-cocoa/60">📍 Stop {index + 1} of {tour.stops.length}</span>
+                      <span className="text-[11px] text-cocoa/60">Stop {index + 1} of {tour.stops.length}</span>
                     </div>
                     <h2 className="mt-1 font-display text-lg font-semibold leading-tight text-ink">{place?.name}</h2>
                   </div>

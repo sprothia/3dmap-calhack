@@ -1,6 +1,6 @@
 import * as Cesium from 'cesium'
 import type { Place } from '../data/types'
-import { CATEGORY_COLOR, CATEGORY_EMOJI } from '../data/categories'
+import { CATEGORY_COLOR } from '../data/categories'
 
 export interface PinHandle {
   /** Highlight one pin (selected) and dim the rest; pass null to clear. */
@@ -40,7 +40,7 @@ export function addPins(
         heightReference: Cesium.HeightReference.CLAMP_TO_GROUND,
       },
       label: {
-        text: `${CATEGORY_EMOJI[place.category]} ${place.name}`,
+        text: place.name,
         font: '13px Inter, sans-serif',
         fillColor: Cesium.Color.fromCssColorString('#3A2E25'),
         showBackground: true,
